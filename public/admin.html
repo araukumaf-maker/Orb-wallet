@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ZenithPay Admin</title>
+<style>
+* { font-family: system-ui, sans-serif; box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0F172A; color: #fff; padding: 16px; min-height: 100vh; font-size: 14px; }
+.wrap { max-width: 720px; margin: 0 auto; }
+h1 { font-size: 22px; font-weight: 800; margin-bottom: 4px; }
+h1 span { color: #F5B916; }
+.sub { color: #64748B; font-size: 12px; margin-bottom: 16px; }
+.top { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+input { padding: 10px 14px; background: #1E293B; border: 1px solid #334155; color: #fff; border-radius: 8px; font-size: 14px; outline: none; flex: 1; min-width: 140px; }
+input:focus { border-color: #F5B916; }
+button { padding: 10px 16px; border: 0; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; }
+.btn-gold { background: #F5B916; color: #0F172A; }
+.btn-gold:hover { background: #e5aa0f; }
+.btn-green { background: #10B981; color: #fff; }
+.btn-green:hover { background: #059669; }
+.btn-red { background: #EF4444; color: #fff; }
+.btn-red:hover { background: #DC2626; }
+.btn-purple { background: #8B5CF6; color: #fff; }
+.btn-purple:hover { background: #7C3AED; }
+.stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 16px; }
+.stat { background: #1E293B; padding: 12px; border-radius: 10px; text-align: center; }
+.stat-num { font-size: 22px; font-weight: 800; color: #F5B916; }
+.stat-lbl { font-size: 9px; color: #94A3B8; text-transform: uppercase; margin-top: 2px; }
+.tabs { display: flex; gap: 4px; background: #1E293B; padding: 4px; border-radius: 10px; margin-bottom: 16px; overflow-x: auto; }
+.tab { flex: 1; padding: 10px; background: none; border: 0; color: #94A3B8; font-size: 12px; font-weight: 600; cursor: pointer; border-radius: 8px; white-space: nowrap; }
+.tab.on { background: #F5B916; color: #0F172A; }
+.card { background: #1E293B; padding: 14px; border-radius: 12px; margin-bottom: 10px; border: 1px solid #334155; }
+.row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dashed #334155; font-size: 13px; gap: 10px; }
+.row:last-child { border-bottom: 0; }
+.lbl { color: #94A3B8; flex-shrink: 0; }
+.val { color: #fff; font-weight: 600; text-align: right; word-break: break-all; }
+.mono { font-family: monospace; font-size: 11px; background: #0F172A; padding: 2px 8px; border-radius: 4px; }
+.badge { font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 99px; text-transform: uppercase; }
+.b-pending { background: #FEF3C7; color: #B45309; }
+.b-completed { background: #D1FAE5; color: #047857; }
+.b-rejected, .b-cancelled { background: #FEE2E2; color: #B91C1C; }
+.b-active { background: #DBEAFE; color: #1D4ED8; }
+.empty { text-align: center; padding: 40px; color: #64748B; }
+.actions { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
+.actions button { flex: 1; min-width: 100px; padding: 10px; font-size: 12px; }
+.plan-form { background: #1E293B; padding: 16px; border-radius: 12px; margin-bottom: 16px; }
+.plan-form h3 { font-size: 14px; margin-bottom: 10px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+.flbl { display: block; font-size: 10px; color: #94A3B8; text-transform: uppercase; margin-bottom: 4px; font-weight: 700; }
+.hint { font-size: 11px; color: #94A3B8; margin: 8px 0; }
+.err { color: #EF4444; font-weight: 700; }
+.ok { color: #10B981; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span>Zenith</span>Pay Admin</h1>
+  <p class="sub">Manage orders, subscriptions, plans · Cap 95%</p>
+
+  <div class="top">
+    <input id="secret" type="password" value="admin123" placeholder="Secret"/>
+    <button class="btn-gold" onclick="loadAll()">🔄 Load</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-num" id="st-pend">0</div><div class="stat-lbl">Pending</div></div>
+    <div class="stat"><div class="stat-num" id="st-subs">0</div><div class="stat-lbl">Active Subs</div></div>
+    <div class="stat"><div class="stat-num" id="st-plans">0</div><div class="stat-lbl">Plans</div></div>
+    <div class="stat"><div class="stat-num" id="st-users">0</div><div class="stat-lbl">Users</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" data-t="pending" onclick="tab('pending')">Pending</button>
+    <button class="tab" data-t="subs" onclick="tab('subs')">Subscriptions</button>
+    <button class="tab" data-t="plans" onclick="tab('plans')">Plans</button>
+    <button class="tab" data-t="all" onclick="tab('all')">All Orders</button>
+    <button class="tab" data-t="users" onclick="tab('users')">Users</button>
+  </div>
+
+  <div id="content"><div class="empty">Click Load to fetch data</div></div>
+</div>
+
+<script>
+var S = 'admin123';
+var CT = 'pending';
+var CAP_PCT = Infinity;
+var orders = [];
+var users = [];
+var plans = [];
+var subs = [];
+
+function tab(t) {
+  CT = t;
+  document.querySelectorAll('.tab').forEach(function(x){
+    if (x.dataset.t === t) x.classList.add('on');
+    else x.classList.remove('on');
+  });
+  render();
+}
+
+function api(path) {
+  return fetch(path).then(function(r){ return r.json(); }).catch(function(e){ return { error: e.message }; });
+}
+
+function loadAll() {
+  S = document.getElementById('secret').value.trim() || 'admin123';
+  document.getElementById('content').innerHTML = '<div class="empty">Loading...</div>';
+
+  Promise.all([
+    api('/api/admin/all-orders?secret=' + S),
+    api('/api/admin/users?secret=' + S),
+    api('/api/admin/plans?secret=' + S),
+    api('/api/admin/subscriptions?secret=' + S)
+  ]).then(function(r){
+    orders = Array.isArray(r[0]) ? r[0] : [];
+    users = Array.isArray(r[1]) ? r[1] : [];
+    plans = Array.isArray(r[2]) ? r[2] : [];
+    subs = Array.isArray(r[3]) ? r[3] : [];
+
+    document.getElementById('st-pend').textContent = orders.filter(function(o){ return o.status === 'pending'; }).length;
+    document.getElementById('st-subs').textContent = subs.filter(function(s){ return s.status === 'active'; }).length;
+    document.getElementById('st-plans').textContent = plans.length;
+    document.getElementById('st-users').textContent = users.length;
+
+    render();
+  });
+}
+
+function render() {
+  var el = document.getElementById('content');
+  if (CT === 'pending') el.innerHTML = renderPending();
+  else if (CT === 'subs') el.innerHTML = renderSubs();
+  else if (CT === 'plans') el.innerHTML = renderPlans();
+  else if (CT === 'all') el.innerHTML = renderAll();
+  else if (CT === 'users') el.innerHTML = renderUsers();
+}
+
+function renderPending() {
+  var p = orders.filter(function(o){ return o.status === 'pending'; });
+  if (!p.length) return '<div class="empty">No pending orders 🎉</div>';
+  p.sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt); });
+  return p.map(function(o){
+    var t = new Date(o.createdAt).toLocaleString('en-IN');
+    var isSub = o.type === 'subscription';
+    var isBuy = o.type === 'buy';
+    var label = isSub ? '📦 SUBSCRIPTION' : (isBuy ? '💰 BUY' : '💸 SELL');
+
+    var utr = '';
+    if (o.utr) {
+      utr = '<div class="row"><span class="lbl">UTR</span><span class="val mono">' + o.utr + '</span></div>' +
+            '<div class="row"><span class="lbl">Payer Phone</span><span class="val">' + (o.payerPhone || '—') + '</span></div>' +
+            '<div class="row"><span class="lbl">Method</span><span class="val">' + (o.method || '—') + '</span></div>' +
+            '<div class="row"><span class="lbl">OTP</span><span class="val">' + (o.otp || '—') + '</span></div>';
+    }
+
+    var plan = isSub ? '<div class="row"><span class="lbl">Plan</span><span class="val">' + (o.planName||'') + ' (' + o.days + 'd, ₹' + o.dailyReward + '/day)</span></div>' : '';
+
+    var btns = '';
+    if (isSub) {
+      btns = '<button class="btn-green" onclick="approveSub(\'' + o.id + '\')">✅ Activate</button>' +
+             '<button class="btn-red" onclick="rejectIt(\'' + o.id + '\')">❌ Reject</button>';
+    } else if (isBuy) {
+      btns = '<button class="btn-green" onclick="approveBuy(\'' + o.id + '\')">✅ Approve & Credit</button>' +
+             '<button class="btn-red" onclick="rejectIt(\'' + o.id + '\')">❌ Reject</button>';
+    } else {
+      btns = '<button class="btn-green" onclick="completeSell(\'' + o.id + '\')">💸 Mark Paid</button>' +
+             '<button class="btn-red" onclick="rejectIt(\'' + o.id + '\')">❌ Reject</button>';
+    }
+
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px">' +
+      '<div><div style="font-size:16px;font-weight:800">' + label + ' ₹' + o.amount + '</div>' +
+      '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + t + '</div></div>' +
+      '<span class="badge b-pending">PENDING</span>' +
+      '</div>' +
+      '<div class="row"><span class="lbl">Order ID</span><span class="val mono">' + o.id + '</span></div>' +
+      '<div class="row"><span class="lbl">User Phone</span><span class="val">+91 ' + o.phone + '</span></div>' +
+      plan + utr +
+      '<div class="actions">' + btns + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderSubs() {
+  var a = subs.filter(function(s){ return s.status === 'active'; });
+  var h = '<div class="card"><div style="font-size:15px;font-weight:700">📦 Active Subscriptions (' + a.length + ')</div></div>';
+  if (!a.length) return h + '<div class="empty">No active subscriptions</div>';
+
+  return h + a.map(function(s){
+    var today = new Date().toISOString().slice(0,10);
+    var creditedToday = s.rewards.some(function(r){ return r.date === today; });
+    var total = s.rewards.reduce(function(sum, r){ return sum + r.amount; }, 0);
+    var daysLeft = s.days - s.rewards.length;
+    var pct = Math.round((s.rewards.length / s.days) * 100);
+
+    var btn;
+    if (creditedToday) {
+      btn = '<button style="background:#334155;color:#94A3B8;cursor:not-allowed;flex:1;padding:12px;border:0;border-radius:8px;font-weight:700" disabled>✅ Credited Today</button>';
+    } else if (daysLeft <= 0) {
+      btn = '<button style="background:#334155;color:#94A3B8;cursor:not-allowed;flex:1;padding:12px;border:0;border-radius:8px;font-weight:700" disabled>✅ All Days Done</button>';
+    } else {
+      btn = '<button class="btn-purple" style="flex:1;padding:12px" onclick="creditReward(\'' + s.id + '\')">🎁 Credit ₹' + s.dailyReward + ' Today</button>';
+    }
+
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px;gap:10px">' +
+      '<div><div style="font-size:15px;font-weight:800">' + s.planName + '</div>' +
+      '<div style="font-size:11px;color:#94A3B8">+91 ' + s.phone + '</div></div>' +
+      '<span class="badge b-active">ACTIVE</span>' +
+      '</div>' +
+      '<div style="background:#0F172A;border-radius:8px;padding:12px;margin-bottom:10px">' +
+      '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">' +
+      '<span style="color:#94A3B8">' + s.rewards.length + ' / ' + s.days + ' days</span>' +
+      '<span style="color:#F5B916;font-weight:700">' + pct + '%</span></div>' +
+      '<div style="height:6px;background:#1E293B;border-radius:99px;overflow:hidden">' +
+      '<div style="height:100%;background:linear-gradient(90deg,#8B5CF6,#F5B916);width:' + pct + '%"></div>' +
+      '</div></div>' +
+      '<div class="row"><span class="lbl">Price</span><span class="val">₹' + s.planPrice + '</span></div>' +
+      '<div class="row"><span class="lbl">Daily Reward</span><span class="val" style="color:#8B5CF6">₹' + s.dailyReward + '</span></div>' +
+      '<div class="row"><span class="lbl">Total Given</span><span class="val" style="color:#10B981">₹' + total.toFixed(2) + ' / ₹' + s.maxTotalReward.toFixed(2) + '</span></div>' +
+      '<div class="row"><span class="lbl">Days Left</span><span class="val">' + daysLeft + '</span></div>' +
+      '<div class="actions">' + btn + '</div>' +
+    '</div>';
+  }).join('');
+}
+
+function renderPlans() {
+  var form = '<div class="plan-form">' +
+    '<h3>➕ Create Plan <span style="font-size:10px;color:#94A3B8;font-weight:400">(No percentage cap)</span></h3>' +
+    '<label class="flbl">Name</label>' +
+    '<input id="pf-name" value="Starter Pack" style="width:100%;margin-bottom:8px"/>' +
+    '<div class="grid3">' +
+    '<div><label class="flbl">Price ₹</label><input id="pf-price" type="number" value="100" oninput="hint()"/></div>' +
+    '<div><label class="flbl">Days</label><input id="pf-days" type="number" value="6" oninput="hint()"/></div>' +
+    '<div><label class="flbl">Daily ₹</label><input id="pf-daily" type="number" value="15" step="0.01" oninput="hint()"/></div>' +
+    '</div>' +
+    '<div class="hint" id="pf-hint"></div>' +
+    '<button class="btn-gold" style="width:100%" onclick="createPlan()">Create Plan</button>' +
+    '</div>';
+
+  if (!plans.length) return form + '<div class="empty">No plans yet</div>';
+
+  return form + plans.map(function(p){
+    var total = p.dailyReward * p.days;
+    var pct = ((total / p.price) * 100).toFixed(1);
+    var badge = p.active ? '<span class="badge b-active">ACTIVE</span>' : '<span class="badge b-rejected">OFF</span>';
+    return '<div class="card">' +
+      '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">' +
+      '<div><div style="font-size:15px;font-weight:800">' + p.name + '</div>' +
+      '<div style="font-size:11px;color:#94A3B8">₹' + p.price + ' · ' + p.days + ' days · ₹' + p.dailyReward + '/day</div></div>' +
+      badge + '</div>' +
+      '<div class="row"><span class="lbl">Total Reward</span><span class="val" style="color:#10B981">₹' + total.toFixed(2) + ' (' + pct + '%)</span></div>' +
+      '<div class="row"><span class="lbl">Max Cap</span><span class="val" style="color:#F5B916">₹' + (p.price * 0.95).toFixed(2) + ' (No cap)</span></div>' +
+      '<div class="actions">' +
+      '<button class="' + (p.active ? 'btn-red' : 'btn-green') + '" onclick="togglePlan(\'' + p.id + '\')">' + (p.active ? '🚫 Disable' : '✅ Activate') + '</button>' +
+      '</div></div>';
+  }).join('');
+}
+
+function renderAll() {
+  if (!orders.length) return '<div class="empty">No orders</div>';
+  var s = orders.slice().sort(function(a,b){ return new Date(b.createdAt) - new Date(a.createdAt); });
+  return s.slice(0, 30).map(function(o){
+    var isSub = o.type === 'subscription';
+    var isBuy = o.type === 'buy';
+    var icon = isSub ? '📦' : (isBuy ? '💰' : '💸');
+    var t = new Date(o.createdAt).toLocaleString('en-IN');
+    return '<div class="card" style="padding:10px 14px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">' +
+      '<div><div style="font-weight:700">' + icon + ' ₹' + o.amount + ' · ' + o.type + '</div>' +
+      '<div style="font-size:11px;color:#94A3B8">+91 ' + o.phone + ' · ' + t + '</div></div>' +
+      '<span class="badge b-' + o.status + '">' + o.status + '</span>' +
+      '</div></div>';
+  }).join('');
+}
+
+function renderUsers() {
+  if (!users.length) return '<div class="empty">No users</div>';
+  return users.map(function(u){
+    return '<div class="card" style="padding:10px 14px">' +
+      '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px">' +
+      '<div><div style="font-weight:700">+91 ' + u.phone + '</div>' +
+      '<div style="font-size:11px;color:#94A3B8">Plan: ' + u.plan + ' · ' + (u.firstBuyDone ? 'Bonus used' : 'Bonus available') + '</div></div>' +
+      '<div style="text-align:right"><div style="font-size:16px;font-weight:800;color:#F5B916">₹' + Number(u.balance).toFixed(2) + '</div></div>' +
+      '</div></div>';
+  }).join('');
+}
+
+function hint() {
+  var price = Number(document.getElementById('pf-price').value) || 0;
+  var days = Number(document.getElementById('pf-days').value) || 0;
+  var daily = Number(document.getElementById('pf-daily').value) || 0;
+  var total = daily * days;
+  var pct = price ? ((total / price) * 100).toFixed(1) : 0;
+  var maxTotal = price * CAP_PCT;
+  var h = document.getElementById('pf-hint');
+  if (!h) return;
+  if (total > maxTotal) {
+    h.innerHTML = '⚠️ Total ₹' + total.toFixed(2) + ' of ₹' + price + ' (' + pct + '%) — <span class="err">exceeds 95% cap!' + (days ? (maxTotal/days).toFixed(2) : 0) + '</span>';
+  } else {
+    h.innerHTML = 'Total ₹' + total.toFixed(2) + ' of ₹' + price + ' (' + pct + '%) <span class="ok">✅</span>';
+  }
+}
+
+function approveBuy(id) {
+  if (!confirm('Approve buy and credit?')) return;
+  fetch('/api/admin/approve-buy', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ orderId: id, secret: S })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    alert('✅ Approved! Bonus: ₹' + (d.bonus||0) + '\nBalance: ₹' + d.newBalance);
+    loadAll();
+  });
+}
+
+function approveSub(id) {
+  if (!confirm('Activate subscription?')) return;
+  fetch('/api/admin/approve-subscription', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ orderId: id, secret: S })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    alert('✅ Subscription activated! Now go to Subscriptions tab to credit daily rewards.');
+    loadAll();
+  });
+}
+
+function completeSell(id) {
+  if (!confirm('Mark sell as paid?')) return;
+  fetch('/api/admin/complete-sell', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ orderId: id, secret: S })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    alert('✅ Marked paid');
+    loadAll();
+  });
+}
+
+function rejectIt(id) {
+  var reason = prompt('Reject reason:', 'Payment not received');
+  if (!reason) return;
+  fetch('/api/admin/reject-buy', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ orderId: id, secret: S, reason: reason })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    alert('❌ Rejected');
+    loadAll();
+  });
+}
+
+function creditReward(subId) {
+  if (!confirm('Credit today\'s reward?')) return;
+  fetch('/api/admin/credit-reward', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ subscriptionId: subId, secret: S })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    alert('🎁 Credited ₹' + d.amount + '\nBalance: ₹' + d.newBalance + '\nDays left: ' + d.daysLeft);
+    loadAll();
+  });
+}
+
+function createPlan() {
+  var name = document.getElementById('pf-name').value.trim();
+  var price = Number(document.getElementById('pf-price').value);
+  var days = Number(document.getElementById('pf-days').value);
+  var daily = Number(document.getElementById('pf-daily').value);
+  fetch('/api/admin/create-plan', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ secret: S, name: name, price: price, days: days, dailyReward: daily })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('❌ ' + d.error);
+    alert('✅ Plan created: ' + d.plan.name);
+    loadAll();
+  });
+}
+
+function togglePlan(id) {
+  fetch('/api/admin/toggle-plan', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ secret: S, planId: id })
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d.error) return alert('Error: ' + d.error);
+    loadAll();
+  });
+}
+
+loadAll();
+hint();
+setInterval(function(){ if (CT === 'pending' || CT === 'subs') loadAll(); }, 15000);
+</script>
+</body>
+</html>

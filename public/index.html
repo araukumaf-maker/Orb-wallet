@@ -1,0 +1,2846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>ZenithPay</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+* { font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { background: #F5F6FA; color: #1E232A; overflow-x: hidden; }
+.screen { display: none; }
+.screen.active { display: block; }
+.app { max-width: 430px; margin: 0 auto; min-height: 100vh; background: #fff; position: relative; }
+.hidden { display: none !important; }
+.toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #1F2937; color: #fff; padding: 12px 24px; border-radius: 99px; font-size: 13px; font-weight: 500; opacity: 0; transition: 0.25s; pointer-events: none; z-index: 9999; max-width: 90%; }
+.toast.show { opacity: 1; }
+::-webkit-scrollbar { display: none; }
+</style>
+</head>
+<body>
+
+<!-- SPLASH SCREEN -->
+<div id="screen-splash" class="screen active" style="background:radial-gradient(circle at 50% 45%, #FFFFFF 0%, #FFFDF5 45%, #FDF4DE 85%, #FBF0D2 100%);overflow:hidden">
+  <div style="position:relative;width:100%;max-width:430px;height:100vh;margin:0 auto;display:flex;align-items:center;justify-content:center">
+
+    <!-- Top-Left Watermark -->
+    <div style="position:absolute;top:-64px;left:-64px;opacity:0.4;transform:rotate(-12deg);pointer-events:none">
+      <svg width="256" height="256" viewBox="0 0 200 200" fill="none" style="color:#EBBA44">
+        <circle cx="100" cy="100" opacity="0.3" r="92" stroke="currentColor" stroke-width="6"/>
+        <circle cx="100" cy="100" opacity="0.25" r="82" stroke="currentColor" stroke-width="2"/>
+        <circle cx="100" cy="100" fill="currentColor" fill-opacity="0.06" r="70" stroke="currentColor" stroke-opacity="0.2" stroke-width="1.5"/>
+        <path d="M100 42L150 148H122L100 98L78 148H50L100 42Z" fill="currentColor" fill-opacity="0.1" opacity="0.4" stroke="currentColor" stroke-width="2"/>
+      </svg>
+    </div>
+
+    <!-- Bottom-Right Watermark -->
+    <div style="position:absolute;bottom:-96px;right:-96px;opacity:0.6;transform:rotate(12deg);pointer-events:none">
+      <svg width="440" height="440" viewBox="0 0 400 400" fill="none" style="color:#EBBA44">
+        <circle cx="200" cy="200" opacity="0.2" r="190" stroke="currentColor" stroke-width="7"/>
+        <circle cx="200" cy="200" opacity="0.25" r="172" stroke="currentColor" stroke-width="3"/>
+        <circle cx="200" cy="200" fill="currentColor" fill-opacity="0.04" opacity="0.15" r="150" stroke="currentColor" stroke-width="2"/>
+        <path d="M200 86L304 300H252L200 196L148 300H96L200 86Z" fill="#F1C250" fill-opacity="0.08" opacity="0.3" stroke="currentColor" stroke-width="4"/>
+      </svg>
+    </div>
+
+    <!-- Center Brand Loading -->
+    <div style="position:relative;display:flex;align-items:center;justify-content:center">
+
+      <!-- Ambient glow -->
+      <div style="position:absolute;width:224px;height:224px;border-radius:50%;background:radial-gradient(circle, rgba(254, 218, 106, 0.35) 0%, rgba(254, 218, 106, 0.08) 55%, transparent 70%);animation:pulseGlow 2.5s ease-in-out infinite"></div>
+
+      <!-- Static outer ring -->
+      <div style="position:absolute;width:142px;height:142px;border-radius:50%;border:1px solid #F2C246;opacity:0.35"></div>
+
+      <!-- Spinning Arc -->
+      <div style="position:relative;width:130px;height:130px;display:flex;align-items:center;justify-content:center">
+        <svg style="position:absolute;inset:0;width:100%;height:100%;transform:rotate(-45deg);animation:spin 9s linear infinite" viewBox="0 0 130 130" fill="none">
+          <circle cx="65" cy="65" opacity="0.5" r="60" stroke="#FDE48C" stroke-width="3.5"/>
+          <circle cx="65" cy="65" r="60" stroke="url(#splashGrad)" stroke-dasharray="377" stroke-dashoffset="180" stroke-linecap="round" stroke-width="4.5"/>
+          <defs>
+            <linearGradient id="splashGrad" x1="0%" x2="100%" y1="0%" y2="100%">
+              <stop offset="0%" stop-color="#FFCB2B"/>
+              <stop offset="50%" stop-color="#F2A900"/>
+              <stop offset="100%" stop-color="#E29200"/>
+            </linearGradient>
+          </defs>
+        </svg>
+
+        <!-- Inner badge -->
+        <div style="width:112px;height:112px;border-radius:50%;background:#FCF8EE;box-shadow:inset 0 2px 8px rgba(0,0,0,0.06);display:flex;align-items:center;justify-content:center;border:1px solid #F9E8B6;position:relative;z-index:10">
+          <div style="position:absolute;inset:3px;border-radius:50%;border:1px solid rgba(255,255,255,0.7);pointer-events:none"></div>
+          <svg width="50" height="50" viewBox="0 0 100 100" fill="none" style="filter:drop-shadow(0 2px 4px rgba(224,154,0,0.25))">
+            <defs>
+              <linearGradient id="logoGold" x1="50%" x2="50%" y1="0%" y2="100%">
+                <stop offset="0%" stop-color="#FFCE2B"/>
+                <stop offset="60%" stop-color="#F5AD06"/>
+                <stop offset="100%" stop-color="#E59900"/>
+              </linearGradient>
+            </defs>
+            <path d="M50 18L83 80H62.5L50 56.5L37.5 80H17L50 18Z" fill="url(#logoGold)"/>
+            <polygon fill="#FCF8EE" points="50,37 62.5,60 37.5,60"/>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Brand text -->
+    <div style="position:absolute;bottom:100px;left:0;right:0;text-align:center">
+      <div style="font-size:26px;font-weight:900;letter-spacing:-0.03em;color:#1E232A">
+        <span style="color:#F5B300">Zenith</span><span style="color:#1E2329">Pay</span>
+      </div>
+      <div style="font-size:11px;color:#94A3B8;margin-top:6px;letter-spacing:0.1em;text-transform:uppercase">Loading...</div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+@keyframes spin { from { transform: rotate(-45deg); } to { transform: rotate(315deg); } }
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+</style>
+
+<!-- ===================================================
+     LOGIN SCREEN
+=================================================== -->
+<div id="screen-login" class="screen active">
+  <div class="app" style="background:#fff">
+
+    <main style="padding:20px 20px 60px;min-height:calc(100vh - 56px);display:flex;flex-direction:column">
+      <div style="display:flex;justify-content:flex-end;padding-bottom:16px">
+        <button onclick="showToast('Language: English')" style="background:none;border:0;color:#525252;font-size:15px;cursor:pointer;font-weight:500">🌐 English</button>
+      </div>
+
+      <h1 id="auth-title" style="font-size:34px;font-weight:700;color:#1F242C;letter-spacing:-0.02em;line-height:1.15;margin-bottom:32px">Account Login</h1>
+
+      <div style="margin-bottom:22px">
+        <label style="display:block;font-size:15px;font-weight:500;color:#20252D;margin-bottom:8px">Phone Number</label>
+        <div style="display:flex;align-items:center;background:#F4F5F7;border-radius:8px;padding:6px 12px;border:1px solid transparent;transition:.15s" id="phone-box">
+          <span style="width:24px;height:24px;border-radius:50%;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;border:1px solid #E5E7EB;margin-right:8px;flex-shrink:0">
+            <svg viewBox="0 0 225 150" style="width:100%;height:100%">
+              <rect fill="#FF9933" height="50" width="225"/><rect fill="#FFFFFF" height="50" width="225" y="50"/><rect fill="#128807" height="50" width="225" y="100"/>
+              <circle cx="112.5" cy="75" fill="none" r="18" stroke="#000088" stroke-width="2.5"/><circle cx="112.5" cy="75" fill="#000088" r="3.5"/>
+            </svg>
+          </span>
+          <span style="font-size:15px;font-weight:500;color:#262626;margin-right:8px">+91</span>
+          <input id="phone" type="tel" inputmode="numeric" maxlength="10" placeholder="Please enter your phone number."
+                 style="width:100%;background:transparent;border:0;padding:8px 0;font-size:15px;color:#1F2937;outline:none"
+                 oninput="this.value=this.value.replace(/[^0-9]/g,'')"
+                 onfocus="document.getElementById('phone-box').style.borderColor='#FBBF24';document.getElementById('phone-box').style.background='#fff'"
+                 onblur="document.getElementById('phone-box').style.borderColor='transparent';document.getElementById('phone-box').style.background='#F4F5F7'"/>
+        </div>
+      </div>
+
+      <div style="margin-bottom:22px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px">
+          <label style="font-size:15px;font-weight:500;color:#20252D">Password</label>
+          <button onclick="forgotPw()" style="background:none;border:0;color:#D99B00;font-size:15px;font-weight:500;cursor:pointer;padding:0">Forgot Password?</button>
+        </div>
+        <div style="display:flex;align-items:center;background:#F4F5F7;border-radius:8px;padding:6px 12px;border:1px solid transparent;position:relative;transition:.15s" id="pw-box">
+          <input id="password" type="password" placeholder="Please enter your login password."
+                 style="width:100%;background:transparent;border:0;padding:8px 40px 8px 0;font-size:15px;color:#1F2937;outline:none"
+                 onfocus="document.getElementById('pw-box').style.borderColor='#FBBF24';document.getElementById('pw-box').style.background='#fff'"
+                 onblur="document.getElementById('pw-box').style.borderColor='transparent';document.getElementById('pw-box').style.background='#F4F5F7'"/>
+          <button type="button" onclick="togglePw()" style="position:absolute;right:12px;background:none;border:0;color:#B0B3BD;cursor:pointer;padding:4px">
+            <svg id="eye-icon" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+              <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <p id="msg" style="text-align:center;font-size:13px;min-height:18px;margin-bottom:16px"></p>
+
+      <button id="auth-btn" onclick="doAuth()" style="width:100%;background:#F5B916;color:#1E232A;font-weight:700;font-size:16px;padding:14px;border:0;border-radius:8px;cursor:pointer;margin-bottom:14px">
+        Log In
+      </button>
+
+      <button onclick="showToast('Help: help@zenithpay.app')" style="width:100%;background:#EAEDF1;color:#222730;font-weight:600;font-size:16px;padding:14px;border:0;border-radius:8px;cursor:pointer">
+        Help Center
+      </button>
+
+      <div style="margin-top:32px;font-size:15px">
+        <span id="switch-label" style="color:#20252D">No Account? </span>
+        <button onclick="switchMode()" style="background:none;border:0;color:#D99B00;font-weight:600;font-size:15px;cursor:pointer;padding:0">
+          <span id="switch-text">Register Now →</span>
+        </button>
+      </div>
+    </main>
+  </div>
+</div>
+
+
+<!-- REGISTER WITH OTP -->
+<div id="screen-register" class="screen" style="background:#fff">
+  <div class="app" style="background:#fff;padding-bottom:20px">
+
+    <header style="display:flex;align-items:center;justify-content:space-between;padding:12px 20px;height:48px">
+      <button onclick="showScreen('login')" style="background:none;border:0;color:#1F2937;cursor:pointer;padding:6px;margin-left:-8px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 19l-7-7m0 0l7-7m-7 7h18" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:20px;font-weight:700;color:#111827">Register</h1>
+      <button onclick="showToast('Language: English')" style="background:none;border:0;color:#1F2937;cursor:pointer;padding:6px;display:flex;align-items:center;gap:6px;font-size:15px;font-weight:500">🌐 English</button>
+    </header>
+
+    <main style="padding:16px 20px 40px">
+
+      <!-- Hero -->
+      <section style="text-align:center;margin-top:8px">
+        <p style="font-size:17px;font-weight:700;color:#111827;letter-spacing:-0.01em">
+          Join <span style="color:#F1A80A">ZenithPay</span> and enjoy trading fun together
+        </p>
+        <div style="position:relative;margin:16px auto 0;width:112px;height:112px;display:flex;align-items:center;justify-content:center">
+          <div style="position:absolute;inset:0;background:rgba(219,234,254,0.6);border-radius:50%;filter:blur(2px)"></div>
+          <svg width="80" height="80" viewBox="0 0 100 100" style="position:relative;z-index:2;filter:drop-shadow(0 4px 6px rgba(0,0,0,0.1))">
+            <circle cx="50" cy="50" fill="#EBF4FE" r="44"/>
+            <rect fill="#F43F5E" height="40" rx="6" width="56" x="22" y="44"/>
+            <rect fill="#FBBF24" height="40" width="12" x="44" y="44"/>
+            <rect fill="#FBBF24" height="10" opacity="0.3" width="56" x="22" y="58"/>
+            <rect fill="#FB7185" height="12" rx="4" width="64" x="18" y="36"/>
+            <rect fill="#F59E0B" height="12" width="12" x="44" y="36"/>
+            <path d="M50 36 C42 22, 28 26, 36 36 Z" fill="#FBBF24"/>
+            <path d="M50 36 C58 22, 72 26, 64 36 Z" fill="#FBBF24"/>
+            <ellipse cx="50" cy="36" fill="#F59E0B" rx="5" ry="4"/>
+            <polygon fill="#FBBF24" opacity="0.85" points="26,24 28,20 30,24 34,26 30,28 28,32 26,28 22,26"/>
+            <polygon fill="#FBBF24" opacity="0.85" points="76,28 77,25 79,28 82,29 79,30 77,33 76,30 73,29"/>
+          </svg>
+        </div>
+      </section>
+
+      <!-- Perks -->
+      <section style="margin-top:16px;display:flex;flex-direction:column;gap:14px;text-align:left;padding:0 4px">
+        <div style="display:flex;gap:12px">
+          <svg style="width:20px;height:20px;flex-shrink:0;margin-top:2px;color:#475569" fill="currentColor" viewBox="0 0 24 24"><path d="M20 7h-2.08A4.996 4.996 0 0 0 13 3c-1.3 0-2.48.5-3.37 1.32L9 4c-.7 0-1.37.15-1.98.42C5.81 3.53 4.5 3 3 3a1 1 0 0 0 0 2c1.3 0 2.45.68 3.12 1.7L3 7a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h1v8a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-8h1a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1zm-9-2a3 3 0 0 1 3 3h-3V5zM6.88 6.53A3 3 0 0 1 10 5v2H6.38a3.02 3.02 0 0 1 .5-.47zM4 9h7v2H4V9zm2 4h5v7H6v-7zm12 7h-5v-7h5v7zm2-9h-7V9h7v2z"/></svg>
+          <p style="font-size:13px;line-height:1.5;color:#4B5563"><span style="font-weight:600;color:#1F2937">New User Reward:</span> Exclusive gift pack for new users, complete simple steps to receive instantly</p>
+        </div>
+        <div style="display:flex;gap:12px">
+          <svg style="width:20px;height:20px;flex-shrink:0;margin-top:2px;color:#475569" fill="currentColor" viewBox="0 0 24 24"><ellipse cx="10" cy="6" rx="7" ry="3"/><path d="M3 7.5v3c0 1.66 3.13 3 7 3s7-1.34 7-3v-3c0 1.66-3.13 3-7 3s-7-1.34-7-3z"/><circle cx="17.5" cy="17.5" fill="#FBBF24" r="4.5"/></svg>
+          <p style="font-size:13px;line-height:1.5;color:#4B5563"><span style="font-weight:600;color:#1F2937">Trading Reward:</span> The more you trade, the higher the commission, enjoy long-term benefits</p>
+        </div>
+        <div style="display:flex;gap:12px">
+          <svg style="width:20px;height:20px;flex-shrink:0;margin-top:2px;color:#475569" fill="currentColor" viewBox="0 0 24 24"><path d="M5 19h14a1 1 0 0 0 1-1v-1a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1zm15.5-12.5a1.5 1.5 0 0 0-1.5 1.5c0 .32.1.62.28.87L16 12.5 12.7 6.9c.43-.33.7-.85.7-1.4a1.5 1.5 0 1 0-3 0c0 .55.27 1.07.7 1.4L7.8 12.5 4.52 9.67c.18-.25.28-.55.28-.87a1.5 1.5 0 1 0-1.5 1.5c.2 0 .39-.04.57-.12l2.3 5.48c.18.44.6.74 1.08.74h9.75c.48 0 .9-.3 1.08-.74l2.3-5.48c.18.08.37.12.57.12a1.5 1.5 0 0 0 1.5-1.5 1.5 1.5 0 0 0-1.95-1.4z"/></svg>
+          <p style="font-size:13px;line-height:1.5;color:#4B5563"><span style="font-weight:600;color:#1F2937">Member Exclusive:</span> Level tasks open for a limited time, extra rewards available</p>
+        </div>
+      </section>
+
+      <!-- Form -->
+      <form id="reg-form" onsubmit="event.preventDefault(); doRegister();" style="margin-top:24px;display:flex;flex-direction:column;gap:16px">
+
+        <!-- Phone -->
+        <div>
+          <label style="display:block;font-size:15px;font-weight:600;color:#111827;margin-bottom:6px">Phone Number</label>
+          <div style="display:flex;align-items:center;height:48px;padding:0 14px;background:#F4F5F7;border-radius:8px">
+            <span style="width:24px;height:24px;border-radius:50%;overflow:hidden;display:inline-flex;flex-direction:column;margin-right:10px;border:1px solid #E5E7EB">
+              <span style="flex:1;background:#FF9933"></span>
+              <span style="flex:1;background:#fff;display:flex;align-items:center;justify-content:center"><span style="width:6px;height:6px;border-radius:50%;border:1px solid #000080"></span></span>
+              <span style="flex:1;background:#128807"></span>
+            </span>
+            <span style="font-size:15px;font-weight:500;color:#111827;margin-right:8px">+91</span>
+            <input id="reg-phone" type="tel" inputmode="numeric" maxlength="10" placeholder="Please enter your phone number." style="flex:1;background:transparent;border:0;font-size:15px;color:#111827;outline:none" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+          </div>
+        </div>
+
+        <!-- OTP -->
+        <div>
+          <label style="display:block;font-size:15px;font-weight:600;color:#111827;margin-bottom:6px">Verification Code</label>
+          <div style="position:relative;display:flex;align-items:center;height:48px;background:#F4F5F7;border-radius:8px;padding:0 8px 0 14px">
+            <input id="reg-otp" type="tel" inputmode="numeric" maxlength="6" placeholder="Enter Verification Code" style="flex:1;background:transparent;border:0;font-size:15px;color:#111827;outline:none" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+            <button type="button" id="otp-btn" onclick="sendOtp()" style="height:32px;padding:0 16px;background:#FFC000;color:#1E232A;font-weight:600;font-size:13px;border:0;border-radius:6px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">Send</button>
+          </div>
+          <p style="font-size:12px;color:#4B5563;margin-top:6px">Can't receive the verification code? <a onclick="showToast('Support: help@zenithpay.app')" style="color:#E59B00;font-weight:500;cursor:pointer;text-decoration:underline">Customer Service</a></p>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label style="display:block;font-size:15px;font-weight:600;color:#111827;margin-bottom:6px">Login Password</label>
+          <div style="position:relative;display:flex;align-items:center;height:48px;background:#F4F5F7;border-radius:8px;padding:0 14px">
+            <input id="reg-password" type="password" placeholder="Please enter your login password." style="flex:1;background:transparent;border:0;font-size:15px;color:#111827;outline:none;padding-right:32px"/>
+            <button type="button" onclick="togglePwField('reg-password', this)" style="position:absolute;right:14px;background:none;border:0;color:#9CA3AF;cursor:pointer;padding:0">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div>
+          <label style="display:block;font-size:15px;font-weight:600;color:#111827;margin-bottom:6px">Confirm Password</label>
+          <div style="position:relative;display:flex;align-items:center;height:48px;background:#F4F5F7;border-radius:8px;padding:0 14px">
+            <input id="reg-confirm" type="password" placeholder="Please enter the confirmation password." style="flex:1;background:transparent;border:0;font-size:15px;color:#111827;outline:none;padding-right:32px"/>
+            <button type="button" onclick="togglePwField('reg-confirm', this)" style="position:absolute;right:14px;background:none;border:0;color:#9CA3AF;cursor:pointer;padding:0">
+              <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Invitation Code -->
+        <div>
+          <label style="display:block;font-size:15px;font-weight:600;color:#111827;margin-bottom:6px">Invitation Code</label>
+          <div style="display:flex;align-items:center;height:48px;background:#F4F5F7;border-radius:8px;padding:0 14px">
+            <input id="reg-invite" type="text" placeholder="Please enter the invitation code." style="flex:1;background:transparent;border:0;font-size:15px;color:#111827;outline:none"/>
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <div style="padding-top:6px">
+          <label style="display:inline-flex;align-items:center;gap:10px;cursor:pointer">
+            <input id="reg-terms" type="checkbox" checked style="width:18px;height:18px;border-radius:50%;accent-color:#FFC000;cursor:pointer"/>
+            <span style="font-size:12px;color:#111827;line-height:1.4">I have agreed to and read the <a onclick="showToast('User Agreement')" style="color:#E39C06;text-decoration:underline;cursor:pointer">《User Agreement》</a></span>
+          </label>
+        </div>
+
+        <!-- Message -->
+        <p id="reg-msg" style="text-align:center;font-size:13px;min-height:18px;color:#6B7280;font-weight:500"></p>
+
+        <!-- Register Button -->
+        <button id="reg-submit" type="submit" style="width:100%;height:48px;background:#FFC000;color:#1E232A;font-weight:700;font-size:16px;border:0;border-radius:8px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+          Register
+        </button>
+
+      </form>
+
+    </main>
+  </div>
+</div>
+
+
+<!-- ORDER CANCELED -->
+<div id="screen-cancel" class="screen" style="background:#fff">
+  <div class="app" style="background:#fff;display:flex;flex-direction:column;min-height:100vh">
+
+    <header style="position:sticky;top:0;z-index:20;background:#fff;padding:8px 16px;height:56px;display:flex;align-items:center;justify-content:space-between">
+      <button onclick="openOrders()" style="background:none;border:0;color:#334155;cursor:pointer;padding:6px;margin-left:-6px">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:17px;font-weight:700;color:#0F172A;letter-spacing:-0.01em">Order Canceled</h1>
+      <div style="display:flex;align-items:center;gap:12px;background:rgba(241,245,249,0.9);border-radius:99px;padding:4px 12px;color:#64748B;border:1px solid rgba(226,232,240,0.6)">
+        <button onclick="loadCancelInfo()" style="background:none;border:0;color:#64748B;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="width:1px;height:14px;background:#CBD5E1"></div>
+        <button onclick="openOrders()" style="background:none;border:0;color:#64748B;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main style="flex:1;padding:12px 16px 24px;display:flex;flex-direction:column">
+
+      <section style="background:#F4F6FA;border-radius:12px;padding:16px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,0.04);border:1px solid #F1F5F9">
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:10px">
+            <span style="color:#334155">Order ID</span>
+            <div style="display:flex;align-items:center;gap:6px;font-weight:700;color:#0F172A">
+              <span id="cx-order-id" style="font-family:monospace;font-size:13px">—</span>
+              <button onclick="copyCancelId()" style="background:none;border:0;color:#94A3B8;cursor:pointer;padding:2px">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:15px">
+            <span style="color:#334155">Amount</span>
+            <span id="cx-amount" style="font-size:17px;font-weight:700;color:#0F172A">₹0.00</span>
+          </div>
+        </div>
+        <div style="height:1px;background:rgba(226,232,240,0.8);margin-bottom:12px"></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;color:#8A92A0">
+          <span id="cx-phone">—</span>
+          <span id="cx-time">—</span>
+        </div>
+      </section>
+
+      <form id="cancel-form" onsubmit="event.preventDefault(); submitCancel();" style="flex:1;display:flex;flex-direction:column;justify-content:space-between">
+        <div>
+          <h2 style="font-size:16px;font-weight:700;color:#0F172A;margin-bottom:16px">Reason</h2>
+
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <label style="display:flex;align-items:center;gap:12px;cursor:pointer">
+              <input type="radio" name="cancel_reason" value="not_continue" class="cx-radio"/>
+              <span style="font-size:15px;color:#1E293B">I don't want to continue payment</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:12px;cursor:pointer">
+              <input type="radio" name="cancel_reason" value="another_method" class="cx-radio"/>
+              <span style="font-size:15px;color:#1E293B">Want to use another payment method</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:12px;cursor:pointer">
+              <input type="radio" name="cancel_reason" value="system_maintenance" class="cx-radio"/>
+              <span style="font-size:15px;color:#1E293B">Bank system is under maintenance</span>
+            </label>
+            <label style="display:flex;align-items:center;gap:12px;cursor:pointer">
+              <input type="radio" name="cancel_reason" value="upi_error" class="cx-radio"/>
+              <span style="font-size:15px;color:#1E293B">UPI payment error</span>
+            </label>
+            <div>
+              <label style="display:flex;align-items:center;gap:12px;cursor:pointer;margin-bottom:12px">
+                <input type="radio" name="cancel_reason" value="other" id="cx-other-radio" class="cx-radio" checked/>
+                <span style="font-size:15px;color:#1E293B">Other reasons</span>
+              </label>
+              <div style="padding-left:32px">
+                <textarea id="cx-note" rows="4" placeholder="Please fill in other reasons" style="width:100%;font-size:14px;color:#1E293B;background:#fff;border:1px solid #E2E5EB;border-radius:8px;padding:14px;outline:none;resize:none;font-family:inherit"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:32px;padding-top:16px">
+          <p style="font-size:13px;line-height:1.6;color:#334155;margin-bottom:20px">
+            If you have already transferred money to the other party's collection account, please do not cancel the order to avoid causing losses to you.
+          </p>
+          <button id="cx-btn" type="submit" style="width:100%;background:#EF4D4D;color:#fff;font-weight:500;font-size:16px;padding:14px;border:0;border-radius:8px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.1)">
+            Confirm Cancellation
+          </button>
+        </div>
+      </form>
+
+    </main>
+  </div>
+</div>
+
+<style>
+.cx-radio {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid #C8CED8;
+  border-radius: 50%;
+  outline: none;
+  display: inline-grid;
+  place-content: center;
+  margin: 0;
+  background-color: #fff;
+  transition: border-color 0.15s;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+.cx-radio:checked {
+  border-color: #EF4D4D;
+}
+.cx-radio:checked::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #EF4D4D;
+}
+</style>
+
+
+<!-- PAYMENT / UTR SCREEN -->
+<div id="screen-utr" class="screen" style="background:#F8F9FA">
+  <div class="app" style="background:#F8F9FA;display:flex;flex-direction:column;min-height:100vh">
+
+    <header style="position:sticky;top:0;z-index:30;background:#fff;border-bottom:1px solid #F3F4F6;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+      <button onclick="goHome()" style="background:none;border:0;color:#9CA3AF;padding:6px;cursor:pointer">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <div style="display:flex;align-items:baseline;font-weight:800;font-size:20px;letter-spacing:-0.02em">
+        <span style="color:#F5A623">Zenith</span><span style="color:#202738">Pay</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;background:#ECEFF3;border-radius:99px;padding:4px 10px;color:#6B7280">
+        <button onclick="loadUtrScreen()" style="background:none;border:0;color:#6B7280;padding:2px;cursor:pointer">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="width:1px;height:12px;background:#D1D5DB"></div>
+        <button onclick="goHome()" style="background:none;border:0;color:#6B7280;padding:2px;cursor:pointer">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main style="flex:1;max-width:430px;width:100%;margin:0 auto;padding:12px 16px 100px;display:flex;flex-direction:column;gap:16px">
+
+      <!-- Amount + Timer Card -->
+      <section style="background:#fff;border-radius:12px;padding:12px 16px;box-shadow:0 1px 4px rgba(0,0,0,0.04);display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span id="utr-amount" style="font-size:26px;font-weight:900;color:#111827;letter-spacing:-0.02em;line-height:1">₹0.00</span>
+          <button onclick="copyUtrAmount()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:2px">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+          </button>
+        </div>
+        <div style="font-size:13px;color:#6B7280">
+          Countdown to Expiry <span id="utr-timer" style="font-weight:700;color:#1F2937;font-family:monospace">15:00</span>
+        </div>
+      </section>
+
+      <!-- Payment Method -->
+      <section style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;color:#1F242E">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;display:inline-block"></span>
+          <span>Choose a payment method to pay</span>
+        </div>
+        <div id="utr-method-card" style="border-radius:12px;background:linear-gradient(90deg,#5F259F,#7B2CBF);color:#fff;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 6px 16px -4px rgba(95,37,159,0.4)">
+          <span id="utr-method-label" style="font-weight:700;font-size:17px;letter-spacing:0.02em">Phonepe</span>
+          <button onclick="openBankPick()" style="display:flex;align-items:center;gap:4px;border:1px solid rgba(255,255,255,0.8);border-radius:8px;padding:4px 10px;background:transparent;color:#fff;font-size:12px;font-weight:600;cursor:pointer">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <span>Change</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- QR Section -->
+      <section style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;color:#1F242E">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;display:inline-block"></span>
+          <span>Use Mobile Scan code to pay</span>
+        </div>
+        <div style="background:#fff;border:1px solid #E4E7EC;border-radius:16px;padding:20px;display:flex;flex-direction:column;align-items:center;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <div style="background:#fff;padding:8px;border:1px solid #F3F4F6;border-radius:12px;margin-bottom:12px">
+            <img id="utr-qr-img" src="" alt="QR" style="width:220px;height:220px;display:block"/>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;color:#9CA3AF;font-weight:500;font-size:14px;margin-bottom:12px">
+            <span id="utr-reqid" style="font-family:monospace;font-size:12px">—</span>
+            <button onclick="copyUtrReqId()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:2px">
+              <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect height="13" rx="2" ry="2" width="13" x="9" y="9"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            </button>
+          </div>
+          <div style="text-align:center;font-size:13px;color:#4B5563;line-height:1.5;max-width:280px">
+            <p>1. Please use another device to scan the QR code with your payment app.</p>
+            <p style="margin-top:6px">2. If you scan the QR code from this device's gallery, the payment amount may be limited (≤2000).</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- UTR Input -->
+      <section style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:flex-start;gap:6px;font-size:15px;font-weight:700;color:#1F242E;line-height:1.35">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;margin-top:6px;flex-shrink:0"></span>
+          <div>
+            <div>Input or Paste UTR / UPI Ref No / UPI Txn ID</div>
+            <div style="color:#EF4444;font-weight:600;font-size:12px;line-height:1.3;margin-top:2px">If you do not provide a UTR/ UPI Ref No/ UPI Txn ID, the order will Timeout.</div>
+          </div>
+        </div>
+        <input id="utr-input" type="text" maxlength="22" placeholder="Please enter a 12-digit UTR / UPI Txn ID"
+               style="width:100%;background:#F3F4F6;border:0;color:#1F2937;font-size:14px;border-radius:99px;padding:14px 20px;outline:none;margin-top:6px"
+               onfocus="this.style.background='#fff';this.style.boxShadow='0 0 0 2px #F39C12'" onblur="this.style.background='#F3F4F6';this.style.boxShadow='none'"
+               oninput="this.value=this.value.replace(/[^0-9]/g,''); checkUtrForm();"/>
+      </section>
+
+      <!-- Phone Input -->
+      <section style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:flex-start;gap:6px;font-size:15px;font-weight:700;color:#1F242E;line-height:1.35">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;margin-top:6px;flex-shrink:0"></span>
+          <div>
+            <div>Payment Account Number</div>
+            <div style="color:#EF4444;font-weight:500;font-size:12px;line-height:1.3;margin-top:2px">Please enter the payment account mobile number corresponding to the UTR above.</div>
+          </div>
+        </div>
+        <div style="position:relative;display:flex;align-items:center;margin-top:6px">
+          <input id="utr-phone" type="tel" inputmode="numeric" maxlength="10" placeholder="Please enter your phone number."
+                 style="width:100%;background:#F3F4F6;border:0;color:#1F2937;font-size:14px;border-radius:99px;padding:14px 96px 14px 20px;outline:none"
+                 onfocus="this.style.background='#fff';this.style.boxShadow='0 0 0 2px #F39C12'" onblur="this.style.background='#F3F4F6';this.style.boxShadow='none'"
+                 oninput="this.value=this.value.replace(/[^0-9]/g,''); checkUtrForm();"/>
+          <button id="utr-otp-send-btn" onclick="sendUtrOtp(event)" style="position:absolute;right:6px;top:6px;bottom:6px;background:#FAB700;color:#1C1D22;font-weight:600;font-size:12px;padding:0 20px;border:0;border-radius:99px;cursor:pointer">
+            Send
+          </button>
+        </div>
+      </section>
+
+      <!-- OTP Input (hidden until Send clicked) -->
+      <section id="utr-otp-section" style="display:none;flex-direction:column;gap:6px">
+        <div style="display:flex;align-items:flex-start;gap:6px;font-size:15px;font-weight:700;color:#1F242E;line-height:1.35">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;margin-top:6px;flex-shrink:0"></span>
+          <div>
+            <div>Verification Code</div>
+            <div style="color:#EF4444;font-weight:500;font-size:12px;line-height:1.3;margin-top:2px">Enter the 6-digit OTP sent to <span id="utr-otp-phone">—</span></div>
+          </div>
+        </div>
+        <div style="position:relative;display:flex;align-items:center;margin-top:6px">
+          <input id="utr-otp" type="tel" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit OTP"
+                 style="width:100%;background:#F3F4F6;border:0;color:#1F2937;font-size:18px;font-weight:700;letter-spacing:0.3em;text-align:center;border-radius:99px;padding:14px 20px;outline:none"
+                 onfocus="this.style.background='#fff';this.style.boxShadow='0 0 0 2px #F39C12'" onblur="this.style.background='#F3F4F6';this.style.boxShadow='none'"
+                 oninput="this.value=this.value.replace(/[^0-9]/g,''); checkUtrForm();"/>
+        </div>
+        <p id="utr-otp-hint" style="font-size:11px;color:#D99B00;font-weight:600;text-align:center;margin-top:2px">Demo OTP: 123456</p>
+      </section>
+
+      <!-- Reminder -->
+      <section style="display:flex;flex-direction:column;gap:4px;padding-bottom:16px">
+        <div style="display:flex;align-items:center;gap:6px;font-size:15px;font-weight:700;color:#1F242E">
+          <span style="width:8px;height:8px;border-radius:50%;background:#F39C12;display:inline-block"></span>
+          <span>Important reminder:</span>
+        </div>
+        <div style="font-size:13px;color:#374151;line-height:1.6;padding-left:14px">
+          <p>1. After filling in UTR, you need to link KYC to complete the order!</p>
+          <p>2. Linking KYC requires filling in the mobile number of the payment account to receive and fill in the OTP!</p>
+          <p>3. Please use the selected payment method to pay, and the amount transfer must be the same, otherwise 100% failure!</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Bottom CTA -->
+    <footer style="position:sticky;bottom:0;background:rgba(255,255,255,0.95);backdrop-filter:blur(6px);border-top:1px solid #F3F4F6;padding:12px 16px;z-index:30;padding-bottom:calc(env(safe-area-inset-bottom, 0px) + 12px)">
+      <div style="max-width:430px;margin:0 auto;display:grid;grid-template-columns:1fr 2fr;gap:12px">
+        <button onclick="goHome()" style="background:#F8F9FA;border:1px solid #E5E7EB;color:#1F2937;font-weight:600;font-size:14px;padding:14px;border-radius:12px;cursor:pointer">Cancel</button>
+        <button id="utr-submit" onclick="submitUtrForm()" disabled style="background:#FDECB2;color:#D2A645;font-weight:500;font-size:14px;padding:14px;border:0;border-radius:12px;cursor:not-allowed">Submit (UTR/OTP not entered)</button>
+      </div>
+    </footer>
+
+  </div>
+</div>
+
+
+<!-- SUBSCRIPTIONS -->
+<div id="screen-subs" class="screen" style="background:#fff">
+  <div class="app" style="background:#fff">
+    <header style="position:sticky;top:0;z-index:30;background:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F3F4F6">
+      <button onclick="goHome()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:4px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:18px;font-weight:800;color:#1F2937">Subscriptions</h1>
+      <button onclick="loadSubs()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:4px">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <main style="padding:16px 16px 40px">
+      <div style="background:#EFF6FF;border:1px solid #BFDBFE;border-radius:12px;padding:14px;margin-bottom:20px">
+        <div style="font-size:13px;font-weight:700;color:#1D4ED8;margin-bottom:4px">📦 Subscription Plans</div>
+        <div style="font-size:11px;color:#1E40AF;line-height:1.5">Kharidne par daily reward milega (admin approval ke saath). Total reward plan price ke 50% tak hi ho sakta hai — sustainable rehta hai.</div>
+      </div>
+
+      <h2 style="font-size:14px;font-weight:700;color:#1F2937;margin-bottom:12px">Available Plans</h2>
+      <div id="subs-plans-list"></div>
+
+      <h2 style="font-size:14px;font-weight:700;color:#1F2937;margin:20px 0 12px">My Subscriptions</h2>
+      <div id="subs-mine-list"></div>
+    </main>
+  </div>
+</div>
+<!-- ===================================================
+     HOME / AR WALLET
+=================================================== -->
+<div id="screen-home" class="screen">
+  <div class="app" style="background:#FAFAFC;padding-bottom:80px">
+
+    <header style="display:flex;justify-content:space-between;align-items:center;padding:14px 20px 10px;background:#fff;position:sticky;top:0;z-index:40">
+      <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em">
+        <span style="color:#EEA00C">Zenith</span><span style="color:#222731">Pay</span>
+      </div>
+      <div style="background:#F3F5F7;border-radius:99px;padding:6px 12px;display:flex;align-items:center;gap:10px;color:#6B7280">
+        <button onclick="openTopup()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px" title="Topup">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="width:1px;height:14px;background:#D1D5DB"></div>
+        <button onclick="confirmLogout()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px" title="Logout">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main style="padding:4px 16px 20px">
+
+      <section style="margin:8px 4px 16px">
+        <div style="font-size:13px;color:#9CA3AF;font-weight:500">My total assets</div>
+        <div style="font-size:30px;font-weight:900;color:#171A1F;letter-spacing:-0.03em;margin-top:2px">
+          <span id="balance">0.00</span>
+          <span style="font-size:14px;font-weight:700;color:#64748B">ORB</span>
+        </div>
+        <div style="font-size:11px;color:#9CA3AF;margin-top:4px">📱 +91 <span id="uphone">—</span> · Plan: <span id="uplan">None</span></div>
+      </section>
+
+      <section style="position:relative;border-radius:16px;padding:16px;background:linear-gradient(90deg,#FFF5DC,#FFEBB2,#FFD884);border:1px solid #F6DC9F;overflow:hidden;margin-bottom:16px">
+        <div style="position:relative;z-index:2;max-width:65%">
+          <div style="display:inline-flex;align-items:center;gap:4px;margin-bottom:6px">
+            <span style="font-size:14px">📢</span>
+            <span style="font-size:9px;font-weight:700;letter-spacing:0.05em;padding:2px 6px;background:#F6A700;color:#fff;border-radius:4px">IMPORTANT</span>
+          </div>
+          <h2 style="font-size:16px;font-weight:900;color:#473200;letter-spacing:-0.02em;text-transform:uppercase;line-height:1.15">OFFICIAL <span style="color:#F08300">WEBSITE</span></h2>
+          <p style="font-size:9px;color:#7A5B0B;font-weight:500;margin-top:4px;line-height:1.3">Use official sites for secure access</p>
+          <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:8px">
+            <span style="display:inline-flex;align-items:center;gap:3px;padding:3px 8px;background:rgba(255,255,255,0.8);border-radius:99px;font-size:8.5px;font-weight:600;color:#664600;border:1px solid #FDE68A">🌐 zenithpay.app</span>
+          </div>
+        </div>
+        <div style="position:absolute;right:-10px;top:0;bottom:0;width:46%;display:flex;align-items:center;justify-content:center;pointer-events:none">
+          <div style="position:absolute;width:110px;height:110px;background:rgba(252,211,77,0.4);border-radius:50%;filter:blur(30px)"></div>
+          <div style="position:relative;z-index:2;width:90px;height:140px;background:linear-gradient(180deg,#fff,#fffbeb);border-radius:16px;border:3px solid #fff;box-shadow:0 10px 25px rgba(0,0,0,0.1);padding:6px;display:flex;flex-direction:column;align-items:center">
+            <div style="width:24px;height:4px;background:#E5E7EB;border-radius:99px;margin-bottom:6px"></div>
+            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <div style="width:32px;height:32px;background:rgba(245,185,22,0.1);border-radius:8px;display:flex;align-items:center;justify-content:center;color:#EAA100;font-weight:900;font-size:14px">▲</div>
+              <div style="font-size:7px;font-weight:700;color:#6B7280;margin-top:4px">ZenithPay</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:5px;margin-top:10px;position:relative;z-index:2">
+          <span style="width:10px;height:4px;border-radius:99px;background:#E58900"></span>
+          <span style="width:4px;height:4px;border-radius:99px;background:rgba(245,185,22,0.6)"></span>
+          <span style="width:4px;height:4px;border-radius:99px;background:rgba(245,185,22,0.6)"></span>
+          <span style="width:4px;height:4px;border-radius:99px;background:rgba(245,185,22,0.6)"></span>
+        </div>
+      </section>
+
+      <section style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:8px 0">
+        <button onclick="openBuyTiers()" style="display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#E69F21">
+            <svg width="36" height="36" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:#374151">Buy</span>
+        </button>
+        <button onclick="openSell()" style="display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#E69F21">
+            <svg width="36" height="36" fill="currentColor" viewBox="0 0 24 24"><path d="M5 15h4v6h6v-6h4l-7-7-7 7zM5 4v2h14V4H5z"/></svg>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:#374151">Sell</span>
+        </button>
+        <button onclick="openTopup()" style="display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#6B7C93">
+            <svg width="36" height="36" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M8 11h8M8 14h8" stroke-linecap="round"/></svg>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:#374151">Topup</span>
+        </button>
+        <button onclick="openProfile()" style="display:flex;flex-direction:column;align-items:center;gap:6px;background:none;border:0;cursor:pointer">
+          <div style="width:46px;height:46px;border-radius:12px;background:#697A91;display:flex;align-items:center;justify-content:center;color:#FCD34D">
+            <svg width="20" height="20" fill="currentColor" viewBox="0 0 20 20"><path d="M11 3a1 1 0 10-2 0v1a1 1 0 102 0V3zM15.657 5.757a1 1 0 00-1.414-1.414l-.707.707a1 1 0 001.414 1.414l.707-.707zM18 10a1 1 0 01-1 1h-1a1 1 0 110-2h1a1 1 0 011 1zM5.05 6.464A1 1 0 106.464 5.05l-.707-.707a1 1 0 00-1.414 1.414l.707.707zM5 10a1 1 0 01-1 1H3a1 1 0 110-2h1a1 1 0 011 1zM8 16v-1h4v1a2 2 0 11-4 0zM12 14H8a4 4 0 01-.99-7.874 4 4 0 017.98 0A4 4 0 0112 14z"/></svg>
+          </div>
+          <span style="font-size:12px;font-weight:600;color:#374151">User</span>
+        </button>
+      </section>
+
+      <section style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:8px 0">
+        <div onclick="openBuyTiers()" style="position:relative;background:#FFFBF0;border:1px solid #FFE199;border-radius:16px;padding:16px;cursor:pointer;height:86px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+          <div style="font-size:17px;font-weight:900;color:#E89C13;letter-spacing:-0.02em;line-height:1">Buy ORB</div>
+          <div style="font-size:11px;color:#E0A034;font-weight:500;margin-top:4px">Flexible purchasing</div>
+          <div style="position:absolute;right:12px;bottom:10px;color:#EAA620">
+            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          </div>
+        </div>
+        <div onclick="openSell()" style="position:relative;background:#F3FCF7;border:1px solid #B6EAD5;border-radius:16px;padding:16px;cursor:pointer;height:86px;box-shadow:0 1px 3px rgba(0,0,0,0.05)">
+          <div style="font-size:17px;font-weight:900;color:#1EAA6B;letter-spacing:-0.02em;line-height:1">Sell ORB</div>
+          <div style="font-size:11px;color:#28B876;font-weight:500;margin-top:4px">Efficient and fast</div>
+          <div style="position:absolute;right:12px;bottom:10px;color:#22B371">
+            <svg width="32" height="32" fill="currentColor" viewBox="0 0 24 24"><path d="M5 15h4v6h6v-6h4l-7-7-7 7zM5 4v2h14V4H5z"/></svg>
+          </div>
+        </div>
+      </section>
+
+      <div style="padding:16px 4px 8px;display:flex;align-items:center;gap:8px">
+        <svg width="20" height="20" fill="none" stroke="#4B5563" stroke-width="1.8" viewBox="0 0 24 24"><path d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <h4 id="orders-title" style="font-size:15px;font-weight:700;color:#111827">You have 0 orders in progress</h4>
+      </div>
+
+      <div id="orders-container"></div>
+
+    </main>
+
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #F3F4F6;padding:6px 8px calc(env(safe-area-inset-bottom, 0px) + 6px);z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,0.05)">
+      <div style="display:flex;justify-content:space-around;align-items:flex-end;height:60px;position:relative">
+        <button onclick="goHome()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:0;cursor:pointer">
+          <svg width="22" height="22" fill="#F5B300" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h6v-6h2v6h6v-8h3L12 3z"/></svg>
+          <span style="font-size:10.5px;font-weight:700;color:#E59A08">Home</span>
+        </button>
+        <button onclick="showOrders()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:0;cursor:pointer">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">Order</span>
+        </button>
+        <div style="flex:1;display:flex;justify-content:center;position:relative;top:-22px">
+          <button onclick="openBuyTiers()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#FFA500,#FFCF4A);border:4px solid #fff;box-shadow:0 8px 20px rgba(245,177,18,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" stroke-linecap="round" stroke-linejoin="round"/><rect fill="#fff" height="3" width="3" x="7" y="7"/><rect fill="#fff" height="3" width="3" x="14" y="7"/><rect fill="#fff" height="3" width="3" x="7" y="14"/><rect fill="#fff" height="3" width="3" x="14" y="14"/></svg>
+          </button>
+        </div>
+        <button onclick="openRewards()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:0;cursor:pointer">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">Rewards</span>
+        </button>
+        <button onclick="openProfile()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;background:none;border:0;cursor:pointer">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">My</span>
+        </button>
+      </div>
+    </nav>
+
+  </div>
+</div>
+
+<!-- ===================================================
+     BUY ARB MARKETPLACE
+=================================================== -->
+<div id="screen-buytiers" class="screen" style="background:#F8F9FA">
+  <div class="app" style="background:#fff;position:relative;padding-bottom:20px">
+
+    <header style="display:flex;align-items:center;justify-content:space-between;padding:16px 16px 8px">
+      <button onclick="goHome()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:4px;margin-left:-4px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:18px;font-weight:800;color:#1F2937">Buy</h1>
+      <div style="display:flex;align-items:center;gap:8px;background:#F1F3F6;border-radius:99px;padding:5px 10px;color:#6B7280;border:1px solid rgba(229,231,235,0.6)">
+        <button onclick="loadBuyListings()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="width:1px;height:14px;background:#D1D5DB"></div>
+        <button onclick="goHome()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section style="display:flex;align-items:center;justify-content:center;gap:20px;font-size:13px;font-weight:500;color:#9EA3AC;padding:4px 0 12px">
+      <span>1INR = 1ORB</span>
+      <span>1U = 108.00 INR</span>
+    </section>
+
+    <nav style="display:flex;align-items:center;justify-content:space-around;padding:0 8px 12px;position:relative">
+      <button onclick="switchBuyTab('UPI', this)" data-buytab="UPI" class="buy-tab" style="cursor:pointer;padding:8px 12px;background:none;border:0;font-size:14px;font-weight:500;color:#6B7280">UPI</button>
+      <button onclick="switchBuyTab('OTP-UPI', this)" data-buytab="OTP-UPI" class="buy-tab" style="position:relative;cursor:pointer;padding:4px 12px;background:none;border:0;display:flex;flex-direction:column;align-items:center">
+        <span style="position:absolute;top:-10px;right:0;background:#FF5722;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;line-height:1.2;box-shadow:0 1px 3px rgba(0,0,0,0.1)">+5%</span>
+        <span style="font-size:15px;font-weight:800;color:#6B7280;letter-spacing:0.02em">OTP-UPI</span>
+        <span class="buy-indicator" style="width:28px;height:3px;background:transparent;border-radius:99px;margin-top:6px"></span>
+      </button>
+      <button onclick="switchBuyTab('BANK', this)" data-buytab="BANK" class="buy-tab" style="position:relative;cursor:pointer;padding:4px 12px;background:none;border:0;display:flex;flex-direction:column;align-items:center">
+        <span style="position:absolute;top:-10px;right:-8px;background:#FF5722;color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:99px;line-height:1.2">+6%</span>
+        <span style="font-size:14px;font-weight:700;color:#6B7280">BANK</span>
+        <span class="buy-indicator" style="width:28px;height:3px;background:transparent;border-radius:99px;margin-top:6px"></span>
+      </button>
+      <button onclick="switchBuyTab('USDT', this)" data-buytab="USDT" class="buy-tab" style="cursor:pointer;padding:8px 12px;background:none;border:0;font-size:14px;font-weight:500;color:#6B7280">USDT</button>
+    </nav>
+
+    <section style="padding:0 16px;margin-bottom:16px">
+      <div style="background:#FFF3EC;color:#F76B38;font-size:12px;font-weight:500;padding:10px 14px;border-radius:4px">
+        Tips: Requires KYC connection to purchase.
+      </div>
+    </section>
+
+    <section style="padding:0 16px;display:flex;justify-content:flex-end;position:relative;margin-bottom:12px;z-index:30">
+      <button id="filterBtn" onclick="toggleFilterDropdown(event)" style="background:#EAEFF4;color:#1F2937;font-weight:700;font-size:12px;padding:7px 14px;border:0;border-radius:8px;display:flex;align-items:center;gap:6px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,0.04)">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 6h16M7 12h10M10 18h4" stroke-linecap="round"/></svg>
+        <span id="filterLabel">Default</span>
+      </button>
+      <div id="filterDropdown" class="hidden" style="position:absolute;right:16px;top:38px;width:114px;background:#5A5F67;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,0.2);padding:6px;display:flex;flex-direction:column;gap:4px;color:#fff;font-size:12px;font-weight:500">
+        <button onclick="setFilter('Default', event)" style="width:100%;padding:6px;text-align:center;background:none;border:0;color:#D1D5DB;cursor:pointer;border-radius:6px">Default</button>
+        <button onclick="setFilter('Large', event)" style="width:100%;padding:6px;text-align:center;background:#756C4A;color:#FCD25A;font-weight:700;border:0;cursor:pointer;border-radius:8px">Large</button>
+        <button onclick="setFilter('Small', event)" style="width:100%;padding:6px;text-align:center;background:none;border:0;color:#D1D5DB;cursor:pointer;border-radius:6px">Small</button>
+      </div>
+    </section>
+
+    <section id="buy-listings" style="padding:0 16px;display:flex;flex-direction:column">
+      <div style="padding:60px 20px;text-align:center;color:#9CA3AF;font-size:13px">Loading listings...</div>
+    </section>
+
+  </div>
+</div>
+
+<!-- ===================================================
+     SELL SCREEN
+=================================================== -->
+<div id="screen-sell" class="screen">
+  <div class="app" style="background:#FAF9F5">
+    <header style="position:sticky;top:0;z-index:30;background:#FAF9F5;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+      <button onclick="goHome()" style="background:none;border:0;color:#475569;cursor:pointer;padding:4px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:18px;font-weight:800;color:#0F172A">Sell</h1>
+      <button onclick="goHome()" style="background:none;border:0;color:#64748B;cursor:pointer;padding:4px">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <main style="padding:0 16px 100px">
+      <section style="position:relative;border-radius:16px;overflow:hidden;background:linear-gradient(90deg,#202735,#242c3d,#1a202c);color:#fff;padding:16px;min-height:106px;display:flex;align-items:center">
+        <div style="position:relative;z-index:2;padding-left:4px;max-width:65%">
+          <h2 style="font-size:19px;font-weight:700;line-height:1.3">ORB Selling Rules</h2>
+          <p style="font-size:13px;color:rgba(203,213,225,0.9);font-weight:500;margin-top:2px">please read the rules</p>
+        </div>
+      </section>
+
+      <section style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center;padding:8px 4px">
+        <div>
+          <div style="font-size:12.5px;color:#64748B">Available</div>
+          <div style="margin-top:4px;font-size:15px;font-weight:700;color:#0F172A"><span id="sell-bal-top">0.00</span> <span style="font-size:11px;color:#334155">ORB</span></div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#64748B">Sell Balance</div>
+          <div style="margin-top:4px;font-size:15px;font-weight:700;color:#0F172A"><span id="sell-bal">0.00</span> <span style="font-size:11px;color:#334155">ORB</span></div>
+        </div>
+        <div>
+          <div style="font-size:12.5px;color:#64748B">In Progress</div>
+          <div style="margin-top:4px;font-size:15px;font-weight:700;color:#0F172A"><span id="sell-progress">0</span> <span style="font-size:11px;color:#334155">ORB</span></div>
+        </div>
+      </section>
+
+      <section style="margin-top:24px;display:flex;flex-direction:column;align-items:center;position:relative;padding:16px 0">
+        <div style="position:absolute;width:256px;height:256px;border-radius:50%;background:radial-gradient(circle,rgba(255,214,89,0.35) 0%,rgba(250,249,245,0) 70%)"></div>
+        <button onclick="openSellForm()" style="position:relative;z-index:2;width:190px;height:190px;border-radius:50%;border:0;padding:6px;background:linear-gradient(180deg,#FFECA3 0%,#E29E0B 100%);box-shadow:0 10px 24px -2px rgba(246,190,34,0.35);cursor:pointer">
+          <div style="width:100%;height:100%;border-radius:50%;background:radial-gradient(circle at 35% 30%,#FFE272 0%,#F5BA21 55%,#E5A10A 100%);box-shadow:0 14px 30px -4px rgba(245,186,33,0.45),inset 0 3px 6px rgba(255,255,255,0.7),inset 0 -4px 8px rgba(184,122,5,0.4);display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative">
+            <div style="position:absolute;top:4px;left:16px;right:16px;height:64px;background:linear-gradient(180deg,rgba(255,255,255,0.35),transparent);border-radius:9999px 9999px 0 0"></div>
+            <div style="width:64px;height:56px;display:flex;align-items:center;justify-content:center;margin-bottom:4px">
+              <svg width="64" height="56" fill="none" viewBox="0 0 72 64"><path d="M36 6L62 56H48L36 32L24 56H10L36 6Z" fill="#F1A709" opacity="0.6" transform="translate(0,2)"/><path d="M36 6L62 56H48L36 32L24 56H10L36 6Z" fill="#FFE896"/><path d="M26 40H46" stroke="#FFE896" stroke-linecap="round" stroke-width="4.5"/></svg>
+            </div>
+            <div style="font-size:22px;font-weight:800;color:#744500;letter-spacing:-0.02em">Sell ORB</div>
+            <div style="font-size:16px;font-weight:700;color:#965A00;letter-spacing:0.05em;margin-top:4px;opacity:0.9"><span id="sell-count">0</span>/10</div>
+          </div>
+        </button>
+        <p style="margin-top:16px;font-size:13px;color:#94A3B8;font-weight:500">sell orders can exist simultaneously</p>
+      </section>
+
+      <section style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <button onclick="openBankPick()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;padding:12px 16px;border-radius:12px;border:1px solid #F1F5F9;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <svg width="20" height="20" fill="none" stroke="#475569" stroke-width="1.8" viewBox="0 0 24 24"><path d="M19 7h-3V6a3 3 0 00-3-3H5a3 3 0 00-3 3v12a3 3 0 003 3h14a2 2 0 002-2V9a2 2 0 00-2-2zm-5-2a1 1 0 011 1v1H5V6a1 1 0 011-1h8zm5 14H5a1 1 0 01-1-1V9h15v9a1 1 0 010 0z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="13" fill="#475569" r="1"/></svg>
+          <span style="font-size:14px;font-weight:600;color:#334155">Add Bank</span>
+        </button>
+        <button onclick="openHelp()" style="display:flex;align-items:center;justify-content:center;gap:10px;background:#fff;padding:12px 16px;border-radius:12px;border:1px solid #F1F5F9;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.04)">
+          <svg width="20" height="20" fill="none" stroke="#475569" stroke-width="1.8" viewBox="0 0 24 24"><path d="M3 18v-6a9 9 0 0118 0v6" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 19a2 2 0 01-2 2h-1a2 2 0 01-2-2v-3a2 2 0 012-2h3v5zM3 19a2 2 0 002 2h1a2 2 0 002-2v-3a2 2 0 00-2-2H3v5z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:14px;font-weight:600;color:#334155">Support</span>
+        </button>
+      </section>
+
+      <section style="margin-top:28px">
+        <div style="display:flex;align-items:center;gap:8px;padding:0 4px;margin-bottom:12px">
+          <svg width="20" height="20" fill="none" stroke="#64748B" stroke-width="2" viewBox="0 0 24 24"><circle cx="8" cy="9" r="6"/><path d="M6 7.5h4M6 10h4M8 7.5V12M6 8.8h3"/><path d="M12 14a6 6 0 1 0 6 6"/><path d="M15 17h4M17 15v4"/></svg>
+          <h3 style="font-size:16px;font-weight:800;color:#0F172A">In Progress</h3>
+        </div>
+        <div id="sell-progress-list"></div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<!-- ===================================================
+     SELL FORM (input screen)
+=================================================== -->
+<div id="screen-sellform" class="screen">
+  <div class="app" style="background:#fff">
+    <header style="background:#1A1C1E;color:#fff;padding:14px 16px;display:flex;align-items:center;gap:12px">
+      <button onclick="openSell()" style="background:none;border:0;color:#fff;font-size:22px;cursor:pointer;padding:0">←</button>
+      <h1 style="font-size:16px;font-weight:700">Sell ORB</h1>
+    </header>
+    <main style="padding:20px 16px">
+      <div style="background:#ECFDF5;border:2px solid #A7F3D0;border-radius:12px;padding:16px;margin-bottom:20px">
+        <div style="font-size:12px;color:#047857;font-weight:600">Available Balance</div>
+        <div style="font-size:28px;font-weight:900;color:#059669;margin-top:4px">₹<span id="sell-form-bal">0.00</span></div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:14px;font-weight:600;color:#20252D;margin-bottom:8px">Sell Amount (₹)</label>
+        <div style="display:flex;align-items:center;background:#F4F5F7;border-radius:12px;padding:6px 14px;border:2px solid transparent">
+          <span style="font-size:22px;font-weight:900;color:#059669;margin-right:8px">₹</span>
+          <input id="sell-amount" type="number" placeholder="100" style="flex:1;background:none;border:0;padding:12px 0;font-size:22px;font-weight:800;outline:none"/>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:14px;font-weight:600;color:#20252D;margin-bottom:8px">Your UPI ID</label>
+        <div style="display:flex;align-items:center;background:#F4F5F7;border-radius:12px;padding:6px 14px;border:2px solid transparent">
+          <input id="sell-upi" type="text" placeholder="yourname@upi" style="flex:1;background:none;border:0;padding:12px 0;font-size:15px;outline:none"/>
+        </div>
+      </div>
+
+      <button id="sell-btn" onclick="doSell()" style="width:100%;padding:14px;background:#F5B916;color:#1E232A;font-weight:700;font-size:15px;border:0;border-radius:12px;cursor:pointer">
+        Submit Sell Request
+      </button>
+
+      <div style="margin-top:16px;font-size:12px;color:#9CA3AF;text-align:center">
+        Minimum ₹1 · Payment within 24h
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- ===================================================
+     SELECT PAYMENT METHOD
+=================================================== -->
+<div id="screen-bankpick" class="screen" style="background:#fff">
+  <div class="app" style="background:#fff;display:flex;flex-direction:column;padding-bottom:24px">
+
+    <header style="display:flex;align-items:center;justify-content:space-between;padding:12px 12px;border-bottom:1px solid #F3F4F6;position:sticky;top:0;background:#fff;z-index:20">
+      <button onclick="openSell()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:8px">
+        <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:17px;font-weight:700;color:#1F2937;letter-spacing:-0.01em">Select Method Payment</h1>
+      <div style="display:flex;align-items:center;gap:10px;background:#EDEDF0;border-radius:99px;padding:4px 10px;border:1px solid rgba(229,231,235,0.6)">
+        <button onclick="renderPaymentMethods()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div style="width:1px;height:14px;background:#D1D5DB"></div>
+        <button onclick="openSell()" style="background:none;border:0;color:#6B7280;cursor:pointer;padding:2px">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <section style="padding:20px 16px 12px">
+      <h2 style="font-size:17px;font-weight:800;color:#1C1C1E;letter-spacing:-0.01em;margin-bottom:6px">
+        Please select payment account:
+      </h2>
+      <p style="font-size:12.5px;line-height:1.35;color:#E53935;font-weight:400">
+        Please be sure to use the selected platform for payment, otherwise the payment will fail 100% and you will bear the loss yourself.
+      </p>
+    </section>
+
+    <section id="payment-methods-list" style="display:flex;flex-direction:column;gap:14px;padding:8px 16px"></section>
+
+  </div>
+</div>
+
+<!-- ===================================================
+     PAYTM AUTH
+=================================================== -->
+<div id="screen-paytmauth" class="screen">
+  <div class="app" style="background:#fff">
+    <header style="padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+      <button onclick="openBankPick()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:4px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:17px;font-weight:800;color:#111827">Add Payment Method</h1>
+      <button onclick="openSell()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:4px">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <div style="padding:16px 32px 24px">
+      <div style="display:flex;justify-content:space-between;position:relative;max-width:280px;margin:0 auto">
+        <div style="display:flex;flex-direction:column;align-items:center;position:relative;z-index:2">
+          <div style="width:28px;height:28px;border-radius:50%;background:#22C55E;display:flex;align-items:center;justify-content:center;color:#fff;box-shadow:0 0 0 4px rgba(34,197,94,0.15)">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <span style="font-size:12px;font-weight:500;color:#374151;margin-top:6px">Phone</span>
+        </div>
+        <div style="flex:1;height:2px;background:#E5E7EB;margin:0 8px;margin-top:14px"></div>
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:28px;height:28px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#6B7280">2</div>
+          <span style="font-size:12px;color:#9CA3AF;margin-top:6px">Send</span>
+        </div>
+        <div style="flex:1;height:2px;background:#E5E7EB;margin:0 8px;margin-top:14px"></div>
+        <div style="display:flex;flex-direction:column;align-items:center">
+          <div style="width:28px;height:28px;border-radius:50%;background:#F3F4F6;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:#6B7280">3</div>
+          <span style="font-size:12px;color:#9CA3AF;margin-top:6px">Finish</span>
+        </div>
+      </div>
+    </div>
+
+    <main style="padding:12px 20px 40px">
+      <h2 style="font-size:20px;font-weight:800;color:#111827;margin-bottom:10px">Welcome to Authorize Paytm</h2>
+      <p style="font-size:14px;color:#374151;line-height:1.6;margin-bottom:6px">Let us enjoy the work</p>
+      <p style="font-size:14px;color:#374151;line-height:1.6;margin-bottom:6px">1. Enter your Paytm number ;</p>
+      <p style="font-size:14px;color:#374151;line-height:1.6;margin-bottom:24px">2. Click the "Next" button to proceed.</p>
+
+      <label style="display:block;font-size:15px;font-weight:600;color:#374151;margin-bottom:8px">Phone Number</label>
+      <input id="paytm-phone" type="tel" inputmode="numeric" maxlength="10" placeholder="Please enter your phone number."
+             style="width:100%;background:#F4F5F7;border:0;border-radius:8px;padding:14px 16px;font-size:15px;outline:none;color:#111827"
+             oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+
+      <p id="paytm-msg" style="text-align:center;font-size:13px;min-height:18px;margin-top:12px"></p>
+
+      <button onclick="submitPaytm()" id="paytm-btn" style="width:100%;background:#FFB800;color:#111827;font-weight:700;padding:14px;border:0;border-radius:8px;font-size:15px;cursor:pointer;margin-top:12px">
+        Next
+      </button>
+    </main>
+  </div>
+</div>
+
+<!-- ===================================================
+     ORDERS
+=================================================== -->
+<div id="screen-orders" class="screen">
+  <div class="app" style="background:#fff;padding-bottom:80px">
+    <header style="padding:16px 20px 8px;display:flex;justify-content:space-between;align-items:center">
+      <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em">
+        <span style="color:#FDB813">Zenith</span><span style="color:#1F2937">Pay</span>
+      </div>
+      <div style="background:#F3F4F6;border-radius:99px;padding:6px 12px;color:#6B7280">
+        <button onclick="loadOrders()" style="background:none;border:0;color:#6B7280;cursor:pointer">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <main style="padding:12px 20px 100px">
+      <div style="display:flex;gap:28px;padding:8px 0 20px">
+        <div style="position:relative;padding-bottom:6px">
+          <button onclick="switchOrderTab('buy')" id="otab-buy" style="background:none;border:0;font-size:20px;font-weight:700;color:#111827;cursor:pointer">My Purchases</button>
+          <span id="otab-line-buy" style="display:block;width:28px;height:3.5px;background:#FDB813;border-radius:99px;margin-top:6px"></span>
+        </div>
+        <div>
+          <button onclick="switchOrderTab('sell')" id="otab-sell" style="background:none;border:0;font-size:20px;font-weight:500;color:#9CA3AF;cursor:pointer">My Sales</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <button style="flex:1;background:#F6F7F9;border:0;padding:10px;border-radius:99px;font-size:14px;color:#374151;cursor:pointer">All ▾</button>
+        <button style="flex:1;background:#F6F7F9;border:0;padding:10px;border-radius:99px;font-size:14px;color:#374151;cursor:pointer">Choose Time ▾</button>
+      </div>
+
+      <div id="orderhist-content"></div>
+    </main>
+
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#fff;border-top:1px solid #F3F4F6;padding:6px 8px calc(env(safe-area-inset-bottom, 0px) + 6px);z-index:50;box-shadow:0 -4px 20px rgba(0,0,0,0.05)">
+      <div style="display:flex;justify-content:space-around;align-items:flex-end;height:60px;position:relative">
+        <button onclick="goHome()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M12 2L3 9v11a2 2 0 002 2h14a2 2 0 002-2V9l-9-7zm0 4.5l5 3.8v7.7H7v-7.7l5-3.8z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">Home</span>
+        </button>
+        <button style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:6px 4px">
+          <div style="width:20px;height:20px;background:#FDB813;border-radius:4px;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center">A</div>
+          <span style="font-size:10.5px;font-weight:700;color:#1F2937">Order</span>
+        </button>
+        <div style="flex:1;display:flex;justify-content:center;position:relative;top:-22px">
+          <button onclick="openBuyTiers()" style="width:56px;height:56px;border-radius:50%;background:#FDB813;border:4px solid #fff;box-shadow:0 8px 20px rgba(253,184,19,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" stroke-linecap="round" stroke-linejoin="round"/><rect fill="#fff" height="3" width="3" x="7" y="7"/><rect fill="#fff" height="3" width="3" x="14" y="7"/><rect fill="#fff" height="3" width="3" x="7" y="14"/><rect fill="#fff" height="3" width="3" x="14" y="14"/></svg>
+          </button>
+        </div>
+        <button onclick="openRewards()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">Rewards</span>
+        </button>
+        <button onclick="openProfile()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="#9CA3AF" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#9CA3AF">My</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<!-- ===================================================
+     REWARDS
+=================================================== -->
+<div id="screen-rewards" class="screen">
+  <div class="app" style="background:#FAF8F2;padding-bottom:80px;background-image:radial-gradient(circle at 50% -10%, rgba(254,218,126,0.45) 0%, rgba(254,249,237,0.8) 50%, #FAF8F2 100%)">
+    <div style="padding:12px 16px 24px">
+      <header style="display:flex;justify-content:space-between;align-items:center;padding-bottom:12px">
+        <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em">
+          <span style="color:#F5B112">Zenith</span><span style="color:#1C2534">Pay</span>
+        </div>
+        <div style="background:rgba(236,239,244,0.8);border-radius:99px;padding:6px 12px;color:#64748B">
+          <button onclick="openRewards()" style="background:none;border:0;color:#64748B;cursor:pointer">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+        </div>
+      </header>
+
+      <section style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 16px">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:32px;height:32px;border-radius:50%;background:linear-gradient(180deg,#FED44C,#EFA20A);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:14px;box-shadow:0 4px 10px rgba(246,181,30,0.35);border:1px solid #FDE68A">O</div>
+          <div style="display:flex;align-items:baseline;gap:4px">
+            <span style="font-size:14px;font-weight:600;color:#334155">Reward Claimed</span>
+            <span id="rw-claimed" style="font-size:24px;font-weight:900;color:#0F172A;line-height:1">0</span>
+            <span style="font-size:14px;font-weight:700;color:#1E293B">ORB</span>
+          </div>
+        </div>
+        <button onclick="showToast('Rules: Invite friends, they trade, you get rewards')" style="background:rgba(255,255,255,0.9);border:1px solid rgba(226,232,240,0.8);border-radius:99px;padding:6px 12px;font-size:12px;font-weight:500;color:#334155;cursor:pointer">📖 Rules</button>
+      </section>
+
+      <section style="border-radius:16px;padding:16px;background:linear-gradient(135deg,#FFFDF7 0%,#FFF4D2 100%);border:1px solid rgba(251,191,36,0.6);margin-bottom:20px;overflow:hidden;position:relative">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div style="flex:1;padding-right:8px">
+            <span style="display:inline-block;background:#FDF1D3;color:#B07B0F;font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:6px">Current Level</span>
+            <div id="rw-level" style="font-size:30px;font-weight:900;font-style:italic;letter-spacing:2px;color:#A06E11">LV0</div>
+            <div style="margin-top:10px">
+              <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:700;color:#475569;margin-bottom:4px">
+                <span>LV0</span><span>LV1</span>
+              </div>
+              <div style="width:100%;height:8px;background:#EAE2CE;border-radius:99px;overflow:hidden;padding:1px">
+                <div id="rw-progress" style="height:100%;background:linear-gradient(90deg,#F6BA22,#EEA204);border-radius:99px;width:38%"></div>
+              </div>
+            </div>
+          </div>
+          <div style="width:96px;height:96px;display:flex;align-items:center;justify-content:center;position:relative">
+            <svg width="80" height="80" viewBox="0 0 100 100">
+              <polygon fill="url(#gradGold)" points="50,4 92,26 92,74 50,96 8,74 8,26" stroke="#FEE8A3" stroke-width="2.5"/>
+              <circle cx="50" cy="50" fill="#F8BC24" r="28" stroke="#FDEBB3" stroke-width="2"/>
+              <text fill="#FFFFFF" font-size="28" font-style="italic" font-weight="900" text-anchor="middle" x="50" y="58">O</text>
+              <defs><linearGradient id="gradGold" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#FDE89C"/><stop offset="50%" stop-color="#F5B219"/><stop offset="100%" stop-color="#E29204"/></linearGradient></defs>
+            </svg>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid rgba(251,191,36,0.5);text-align:center">
+          <div>
+            <div id="rw-volume" style="font-size:20px;font-weight:800;color:#1E293B">0</div>
+            <div style="font-size:11px;color:#867B66;font-weight:500;margin-top:2px">Valid Volume</div>
+          </div>
+          <div style="border-left:1px solid rgba(251,191,36,0.5)">
+            <div id="rw-buys" style="font-size:20px;font-weight:800;color:#1E293B">0</div>
+            <div style="font-size:11px;color:#867B66;font-weight:500;margin-top:2px">Buy Count</div>
+          </div>
+          <div style="border-left:1px solid rgba(251,191,36,0.5)">
+            <div id="rw-sells" style="font-size:20px;font-weight:800;color:#1E293B">0</div>
+            <div style="font-size:11px;color:#867B66;font-weight:500;margin-top:2px">Sell Count</div>
+          </div>
+        </div>
+      </section>
+
+      <section style="overflow-x:auto;padding:8px 0 12px;margin-bottom:12px">
+        <div style="display:flex;gap:16px;min-width:max-content;padding:0 4px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px">
+            <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon fill="url(#g2)" points="50,6 88,27 88,73 50,94 12,73 12,27" stroke="#FFE899" stroke-width="3"/><circle cx="50" cy="50" fill="#F4B01A" r="22"/><text fill="#FFF" font-size="22" font-weight="900" text-anchor="middle" x="50" y="57">O</text><defs><linearGradient id="g2" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#FFEB9E"/><stop offset="100%" stop-color="#E8990A"/></linearGradient></defs></svg>
+            </div>
+            <span style="font-size:12px;font-weight:700;color:#0F172A">LV0</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5">
+            <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon fill="url(#gS)" points="50,6 88,27 88,73 50,94 12,73 12,27" stroke="#FFF" stroke-width="2.5"/><polygon fill="#D0D7E2" points="50,22 72,36 72,64 50,78 28,64 28,36"/><defs><linearGradient id="gS" x1="0%" x2="100%" y1="0%" y2="100%"><stop offset="0%" stop-color="#F1F4F9"/><stop offset="100%" stop-color="#BCC5D3"/></linearGradient></defs></svg>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:#475569">LV1</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5">
+            <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon fill="url(#gS)" points="50,6 88,27 88,73 50,94 12,73 12,27" stroke="#FFF" stroke-width="2.5"/><polygon fill="#D0D7E2" points="50,22 72,36 72,64 50,78 28,64 28,36"/></svg>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:#475569">LV2</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5">
+            <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon fill="url(#gS)" points="50,6 88,27 88,73 50,94 12,73 12,27" stroke="#FFF" stroke-width="2.5"/><polygon fill="#BAC5D3" points="50,18 76,34 76,66 50,82 24,66 24,34"/><polygon fill="#FFFFFF" points="50,30 64,40 64,60 50,70 36,60 36,40"/></svg>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:#475569">LV3</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:4px;opacity:0.5">
+            <div style="width:48px;height:48px;display:flex;align-items:center;justify-content:center">
+              <svg width="44" height="44" viewBox="0 0 100 100"><polygon fill="url(#gS)" points="50,6 88,27 88,73 50,94 12,73 12,27" stroke="#FFF" stroke-width="2.5"/><polygon fill="#C5CFDB" points="50,20 74,35 74,65 50,80 26,65 26,35"/><polygon fill="#EBF0F6" points="50,28 66,39 66,61 50,72 34,61 34,39"/></svg>
+            </div>
+            <span style="font-size:12px;font-weight:600;color:#475569">LV4</span>
+          </div>
+        </div>
+      </section>
+
+      <section style="background:#FFF8E6;border:1px solid rgba(251,191,36,0.7);border-radius:16px;overflow:hidden;margin-bottom:20px">
+        <div style="position:relative;height:128px;background:linear-gradient(90deg,#FF5722,#FF7A28,#FF9800);display:flex;align-items:center;justify-content:space-between;padding:0 12px;overflow:hidden">
+          <div style="width:96px;height:112px;position:relative;bottom:-8px;display:flex;align-items:flex-end">
+            <div style="width:64px;height:96px;background:#fff;border-radius:12px;border:2px solid #FDE68A;padding:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;transform:rotate(-12deg);box-shadow:0 6px 16px rgba(0,0,0,0.15)">
+              <div style="width:28px;height:28px;background:#FEF3C7;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#F5B112;font-weight:900;font-size:12px">O</div>
+              <div style="font-size:7px;font-weight:700;color:#334155;margin-top:4px">ZenithPay</div>
+            </div>
+          </div>
+          <div style="position:relative;z-index:2">
+            <div style="width:56px;height:48px;background:linear-gradient(135deg,#FF4567,#E91E63);border-radius:8px;position:relative;border:1px solid #FCA5A5;box-shadow:0 6px 16px rgba(0,0,0,0.15)">
+              <div style="position:absolute;left:0;right:0;top:50%;height:10px;background:#FDE047;transform:translateY(-50%)"></div>
+              <div style="position:absolute;top:0;bottom:0;left:50%;width:10px;background:#FDE047;transform:translateX(-50%)"></div>
+            </div>
+          </div>
+          <div style="width:96px;height:112px;position:relative;bottom:-8px;display:flex;align-items:flex-end;justify-content:flex-end">
+            <div style="width:64px;height:88px;background:linear-gradient(135deg,#FFE082,#FFB300);border-radius:12px;border:2px solid #FEF08A;padding:6px;display:flex;align-items:center;justify-content:center;transform:rotate(12deg);box-shadow:0 6px 16px rgba(0,0,0,0.15)">
+              <div style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.4);display:flex;align-items:center;justify-content:center">
+                <svg width="20" height="20" fill="#78350F" viewBox="0 0 24 24"><path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"/></svg>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="padding:16px">
+          <h3 style="font-size:15px;font-weight:700;color:#0F172A;line-height:1.4;margin-bottom:14px">Invite friends to join ZenithPay, rewards credited instantly</h3>
+          <div style="display:flex;flex-direction:column;gap:12px;font-size:12px;color:#374151">
+            <div style="display:flex;gap:12px">
+              <div style="width:24px;height:24px;background:#FEF3C7;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✉</div>
+              <p style="line-height:1.5">Click "Invite Now" to share your exclusive link or poster</p>
+            </div>
+            <div style="display:flex;gap:12px">
+              <div style="width:24px;height:24px;background:#DBEAFE;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">👥</div>
+              <p style="line-height:1.5">Friends register via the link or QR code and complete their first trade</p>
+            </div>
+            <div style="display:flex;gap:12px">
+              <div style="width:24px;height:24px;background:#D1FAE5;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0">💰</div>
+              <p style="line-height:1.5">Invited users can unlock exclusive tasks and get extra rewards</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <button onclick="shareReferral()" style="width:100%;padding:14px;background:linear-gradient(90deg,#F6BA1D,#F1A80A);color:#0F172A;font-weight:700;font-size:16px;border:0;border-radius:12px;cursor:pointer;box-shadow:0 4px 14px rgba(245,186,29,0.25)">
+        Invite Now
+      </button>
+    </div>
+
+    <nav style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(255,255,255,0.95);backdrop-filter:blur(10px);border-top:1px solid rgba(226,232,240,0.8);padding:6px 8px calc(env(safe-area-inset-bottom, 0px) + 6px);z-index:50">
+      <div style="display:flex;justify-content:space-around;align-items:flex-end;height:60px;position:relative">
+        <button onclick="goHome()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#94A3B8">Home</span>
+        </button>
+        <button onclick="showOrders()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#94A3B8">Order</span>
+        </button>
+        <div style="flex:1;display:flex;justify-content:center;position:relative;top:-22px">
+          <button onclick="openBuyTiers()" style="width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#F4B01A,#FCD34D);border:4px solid #fff;box-shadow:0 8px 20px rgba(245,177,18,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer">
+            <svg width="28" height="28" fill="none" stroke="#fff" stroke-width="2.3" viewBox="0 0 24 24"><path d="M3 7V5a2 2 0 012-2h2M17 3h2a2 2 0 012 2v2M21 17v2a2 2 0 01-2 2h-2M7 21H5a2 2 0 01-2-2v-2" stroke-linecap="round" stroke-linejoin="round"/><rect fill="#fff" height="3" width="3" x="7" y="7"/><rect fill="#fff" height="3" width="3" x="14" y="7"/><rect fill="#fff" height="3" width="3" x="7" y="14"/><rect fill="#fff" height="3" width="3" x="14" y="14"/></svg>
+          </button>
+        </div>
+        <button style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;padding:6px 4px">
+          <svg width="22" height="22" fill="#F5B112" viewBox="0 0 20 20"><path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/></svg>
+          <span style="font-size:10.5px;font-weight:700;color:#0F172A">Rewards</span>
+        </button>
+        <button onclick="openProfile()" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:0;cursor:pointer;padding:6px 4px">
+          <svg width="22" height="22" fill="none" stroke="#94A3B8" stroke-width="2" viewBox="0 0 24 24"><path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <span style="font-size:10.5px;font-weight:500;color:#94A3B8">My</span>
+        </button>
+      </div>
+    </nav>
+  </div>
+</div>
+
+<!-- ===================================================
+     PROFILE
+=================================================== -->
+<div id="screen-profile" class="screen">
+  <div class="app" style="background:#f1f3f6;padding-bottom:40px">
+    <header style="padding:12px 20px;display:flex;justify-content:space-between;align-items:center;background:#fff">
+      <div style="font-size:22px;font-weight:900;letter-spacing:-0.03em">
+        <span style="color:#F5B300">Zenith</span><span style="color:#1E2329">Pay</span>
+      </div>
+      <button onclick="goHome()" style="background:rgba(241,245,249,0.9);border:1px solid rgba(226,232,240,0.6);border-radius:99px;padding:6px 12px;color:#64748B;cursor:pointer">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <main style="padding:8px 16px 20px">
+      <section style="display:flex;align-items:center;justify-content:space-between;padding:12px 0">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:56px;height:56px;border-radius:50%;background:#9da79f;display:flex;align-items:center;justify-content:center;padding:8px">
+            <svg width="36" height="36" viewBox="0 0 100 100"><path d="M50 12 L86 80 L66 80 L50 48 L34 80 L14 80 Z" fill="#F5B300"/><polygon fill="#9da79f" points="50,28 68,68 32,68"/><polygon fill="#F5B300" points="50,38 60,60 40,60"/></svg>
+          </div>
+          <div>
+            <h1 id="pf-username" style="font-size:20px;font-weight:800;color:#0F172A;line-height:1.1">User</h1>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:4px;color:#9CA3AF;font-size:14px;font-weight:500">
+              <span id="pf-uid">UID:—</span>
+            </div>
+          </div>
+        </div>
+        <button onclick="openProfileFull()" style="background:none;border:0;color:#D1D5DB;cursor:pointer;padding:4px">
+          <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </section>
+
+      <section style="border-radius:16px;background:#08172E;color:#fff;padding:20px;box-shadow:0 10px 30px rgba(15,23,42,0.15);position:relative;overflow:hidden">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;font-size:12px">
+          <div style="display:flex;align-items:center;gap:6px;font-weight:500">
+            <span style="color:#CBD5E1">Not Verified</span>
+            <span style="color:#64748B">|</span>
+            <span style="color:#FBBF24;font-weight:600">Verify Now</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:4px;background:#244368;border-radius:99px;padding:3px 8px;border:1px solid rgba(59,102,153,0.4)">
+            <svg width="12" height="12" fill="#FBBF24" viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg>
+            <span style="font-size:10px;font-weight:800;color:#FCD34D;letter-spacing:0.05em">LV0</span>
+          </div>
+        </div>
+        <div style="font-size:12px;color:#CBD5E1;margin-top:8px">Total Asset Valuation</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-top:4px">
+          <span id="pf-balance" style="font-size:34px;font-weight:900;color:#FBBF24;letter-spacing:-0.03em">0.00</span>
+          <span style="font-size:14px;font-weight:600;color:#FBBF24">ORB</span>
+        </div>
+        <div style="height:1px;background:rgba(51,65,85,0.6);margin:12px 0"></div>
+        <div style="font-size:11px;color:#94A3B8">Wallet Address:</div>
+        <div id="pf-wallet" style="font-size:11.5px;font-family:monospace;color:#E2E8F0;margin-top:4px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">—</div>
+      </section>
+
+      <section style="margin-top:20px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px 8px;text-align:center;padding:8px 4px">
+        <button onclick="showToast('KYC coming soon')" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M3 5c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2H3zm2 3h4c.55 0 1 .45 1 1s-.45 1-1 1H5c-.55 0-1-.45-1-1s.45-1 1-1zm0 3h4c.55 0 1 .45 1 1s-.45 1-1 1H5c-.55 0-1-.45-1-1s.45-1 1-1zm9-2a2.5 2.5 0 110 5 2.5 2.5 0 010-5zm-3 7c0-1.66 2.01-3 4.5-3s4.5 1.34 4.5 3H11z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Real-name</span>
+        </button>
+        <button onclick="showOrders()" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M21 7.28V5c0-1.1-.9-2-2-2H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-2.28c.59-.35 1-.99 1-1.72V9c0-.73-.41-1.37-1-1.72zM20 9v6h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Collection</span>
+        </button>
+        <button onclick="showToast('Payment password coming soon')" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Payment Password</span>
+        </button>
+        <button onclick="showToast('Appeal coming soon')" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M4.2 13.8L9.8 8.2 8.4 6.8 2.8 12.4l1.4 1.4zm10.7-9.3l-1.4-1.4c-.4-.4-1-.4-1.4 0l-1.4 1.4 4.2 4.2 1.4-1.4c.4-.4.4-1 0-1.4l-1.4-1.4zm-3.5 3.5L7 12.2l1.4 1.4 4.2-4.2-1.2-1.4zm7.9 10.9l-6.4-6.4-1.4 1.4 6.4 6.4c.4.4 1 .4 1.4 0l1.4-1.4c.4-.4.4-1 0-1.4zM2 20h8v2H2v-2z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">My Appeal</span>
+        </button>
+        <button onclick="showOrders()" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.11 0-1.99.9-1.99 2L3 19c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Transaction</span>
+        </button>
+        <button onclick="showToast('Guidelines coming soon')" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM9 4h2v5l-1-.75L9 9V4zm9 16H6V4h1v7l2.5-1.88L12 11V4h6v16z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Guidelines</span>
+        </button>
+        <button onclick="openBuyTiers()" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM12 17l-4-4h2.5V9.5h3V13H16l-4 4z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Buying Tutorial</span>
+        </button>
+        <button onclick="openSell()" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM12 9l4 4h-2.5v3.5h-3V13H8l4-4z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Selling Tutorial</span>
+        </button>
+        <button onclick="showToast('Settings coming soon')" style="background:none;border:0;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px">
+          <svg width="28" height="28" fill="#F5B300" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+          <span style="font-size:12px;font-weight:600;color:#1E293B">Settings</span>
+        </button>
+      </section>
+
+      <section style="margin-top:24px;background:rgba(248,249,250,0.8);border:1px solid #F1F5F9;border-radius:16px;overflow:hidden">
+        <button onclick="showToast('No new announcements')" style="width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid #F3F4F6;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="20" height="20" fill="#475569" viewBox="0 0 24 24"><path d="M20 2v3H4a1 1 0 00-1 1v5a1 1 0 001 1h2v6a1 1 0 001 1h2a1 1 0 001-1v-6h4.55l3.86 2.89A1 1 0 0021 16V2h-1z"/></svg>
+            <span style="font-size:14px;font-weight:600;color:#1E293B">Announcement</span>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="showToast('Security center coming soon')" style="width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid #F3F4F6;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="20" height="20" fill="#475569" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 14.5l-3.5-3.5 1.41-1.41L11 12.67l5.09-5.09 1.41 1.41L11 15.5z"/></svg>
+            <span style="font-size:14px;font-weight:600;color:#1E293B">Security Center</span>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="openHelp()" style="width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid #F3F4F6;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="20" height="20" fill="#475569" viewBox="0 0 24 24"><path d="M12 1a9 9 0 00-9 9v7c0 1.66 1.34 3 3 3h3v-8H5v-2a7 7 0 0114 0v2h-4v8h3c.37 0 .72-.07 1.04-.19l1.46 1.46A.996.996 0 0021 21a1 1 0 001-1v-10c0-4.97-4.03-9-9-9z"/></svg>
+            <span style="font-size:14px;font-weight:600;color:#1E293B">Help Center</span>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="showToast('English')" style="width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:none;border:0;border-bottom:1px solid #F3F4F6;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="20" height="20" fill="#475569" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/></svg>
+            <span style="font-size:14px;font-weight:600;color:#1E293B">Language</span>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button onclick="showToast('APK download coming soon')" style="width:100%;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;background:none;border:0;cursor:pointer">
+          <div style="display:flex;align-items:center;gap:14px">
+            <svg width="20" height="20" fill="#475569" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM17 13l-5 5-5-5h3V9h4v4h3z"/></svg>
+            <span style="font-size:14px;font-weight:600;color:#1E293B">Download Official App</span>
+          </div>
+          <svg width="16" height="16" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </section>
+
+      <button onclick="confirmLogout()" style="width:100%;padding:14px;background:#F5B300;color:#0F172A;font-weight:700;font-size:15px;border:0;border-radius:12px;cursor:pointer;margin-top:24px">
+        Logout
+      </button>
+    </main>
+  </div>
+</div>
+
+
+<!-- TOPUP BALANCE -->
+<div id="screen-topup" class="screen">
+  <div class="app" style="background:#fff">
+    <header style="position:sticky;top:0;z-index:30;background:#fff;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #F3F4F6">
+      <button onclick="goHome()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:4px">
+        <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <h1 style="font-size:18px;font-weight:800;color:#111827">Top Up Balance</h1>
+      <button onclick="goHome()" style="background:none;border:0;color:#9CA3AF;cursor:pointer;padding:4px">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <main style="padding:20px 16px 40px">
+
+      <!-- Current Balance Card -->
+      <div style="background:linear-gradient(135deg,#1e293b,#0f172a);color:#fff;border-radius:18px;padding:20px;margin-bottom:20px;box-shadow:0 12px 32px rgba(15,23,42,0.2)">
+        <div style="font-size:12px;color:#94A3B8;font-weight:500">Current Balance</div>
+        <div style="font-size:34px;font-weight:900;letter-spacing:-0.03em;margin-top:4px">
+          <span id="tp-current">0.00</span>
+          <span style="font-size:14px;color:#94A3B8;font-weight:700">ORB</span>
+        </div>
+        <div style="margin-top:10px;font-size:11px;color:#64748B">📱 +91 <span id="tp-phone">—</span></div>
+      </div>
+
+      <!-- Amount Input -->
+      <div style="margin-bottom:20px">
+        <label style="display:block;font-size:14px;font-weight:600;color:#20252D;margin-bottom:8px">Top Up Amount (₹)</label>
+        <div style="display:flex;align-items:center;background:#F4F5F7;border-radius:12px;padding:4px 14px;border:2px solid transparent;transition:.15s" id="tp-amt-box">
+          <span style="font-size:26px;font-weight:900;color:#F5B916;margin-right:8px">₹</span>
+          <input id="tp-amount" type="number" value="1" placeholder="1"
+                 style="flex:1;background:none;border:0;padding:14px 0;font-size:26px;font-weight:800;outline:none;color:#1F2937"
+                 oninput="updateTopupPreview()"
+                 onfocus="document.getElementById('tp-amt-box').style.borderColor='#F5B916';document.getElementById('tp-amt-box').style.background='#fff'"
+                 onblur="document.getElementById('tp-amt-box').style.borderColor='transparent';document.getElementById('tp-amt-box').style.background='#F4F5F7'"/>
+        </div>
+      </div>
+
+      <!-- Quick Amount Chips -->
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:20px">
+        <button onclick="setTopup(1)" style="padding:10px;background:#F3F4F6;border:0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#374151">₹1</button>
+        <button onclick="setTopup(10)" style="padding:10px;background:#F3F4F6;border:0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#374151">₹10</button>
+        <button onclick="setTopup(50)" style="padding:10px;background:#F3F4F6;border:0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#374151">₹50</button>
+        <button onclick="setTopup(100)" style="padding:10px;background:#F3F4F6;border:0;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;color:#374151">₹100</button>
+      </div>
+
+      <!-- First Buy Bonus Note -->
+      <div id="tp-bonus-note" style="background:#FFF8E7;border:1px solid #FFE199;border-radius:12px;padding:12px 14px;margin-bottom:20px;display:flex;align-items:flex-start;gap:10px">
+        <span style="font-size:18px">🎁</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#B45309">First Top-Up Bonus</div>
+          <div style="font-size:12px;color:#92400E;margin-top:2px">Pehli top-up par <strong id="tp-bonus-calc">₹0.03</strong> extra milega!</div>
+        </div>
+      </div>
+
+      <!-- UPI Preview -->
+      <div style="background:#F9FAFB;border:1px solid #F3F4F6;border-radius:12px;padding:14px;margin-bottom:20px">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px">
+          <span style="color:#6B7280">Top-up Amount</span>
+          <span id="tp-preview-amt" style="font-weight:700;color:#111827">₹100</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px">
+          <span style="color:#6B7280">Processing Fee</span>
+          <span style="font-weight:600;color:#10B981">₹0</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px dashed #E5E7EB;font-size:14px">
+          <span style="font-weight:700;color:#111827">Total</span>
+          <span id="tp-preview-total" style="font-weight:900;color:#F5B916">₹100</span>
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button id="tp-btn" onclick="doTopup()" style="width:100%;padding:16px;background:#F5B916;color:#1E232A;font-weight:800;font-size:16px;border:0;border-radius:12px;cursor:pointer;box-shadow:0 4px 14px rgba(245,185,22,0.3)">
+        Generate Payment QR
+      </button>
+
+      <div style="margin-top:14px;font-size:11px;color:#9CA3AF;text-align:center;line-height:1.5">
+        UPI QR generate hoga → scan karke pay karein<br>Balance auto-credit hoga payment confirm hone par
+      </div>
+
+      <!-- QR Box -->
+      <div id="tp-qr-box" class="hidden" style="margin-top:24px;text-align:center">
+        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:16px;display:inline-block;box-shadow:0 4px 16px rgba(0,0,0,0.08)">
+          <img id="tp-qr-img" style="width:240px;height:240px;display:block"/>
+        </div>
+        <div style="margin-top:14px;font-size:13px;color:#6B7280">
+          Request ID: <span id="tp-req-id" style="font-family:monospace;color:#111827;font-weight:700">—</span>
+        </div>
+        <div style="margin-top:8px;display:flex;align-items:center;justify-content:center;gap:6px">
+          <span style="width:8px;height:8px;background:#10B981;border-radius:50%;animation:pulse 1.5s infinite"></span>
+          <span style="font-size:12px;color:#6B7280">Payment ka wait kar rahe hain...</span>
+        </div>
+        <button onclick="document.getElementById('tp-qr-box').classList.add('hidden')" style="margin-top:16px;background:#F3F4F6;border:0;padding:10px 24px;border-radius:8px;font-weight:600;font-size:13px;cursor:pointer;color:#374151">Cancel</button>
+      </div>
+
+    </main>
+  </div>
+</div>
+
+<style>
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(1.3); }
+}
+</style>
+
+<div id="toast" class="toast"></div>
+
+<script>
+/* ============ STATE ============ */
+var token = localStorage.getItem('zp_token') || null;
+var currentUser = null;
+var mode = 'login';
+var orderTab = 'buy';
+var paytmPhone = '';
+
+/* ============ API ============ */
+function api(path, method, body) {
+  method = method || 'GET';
+  var h = { 'Content-Type': 'application/json' };
+  if (token) h['Authorization'] = 'Bearer ' + token;
+  return fetch(path, {
+    method: method, headers: h,
+    body: body ? JSON.stringify(body) : undefined
+  }).then(function(r){
+    return r.json().then(function(d){
+      if (!r.ok) throw new Error(d.error || 'Failed');
+      return d;
+    });
+  });
+}
+
+/* ============ NAV ============ */
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(function(s){ s.classList.remove('active'); });
+  var el = document.getElementById('screen-' + name);
+  if (el) el.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function goHome() {
+  if (!token) { showScreen('login'); return; }
+  refreshAll();
+  showScreen('home');
+}
+
+function openBuyTiers() {
+  if (!token) return showScreen('login');
+  if (window.__hasPending) {
+    showToast('⚠️ Pehle apna pending order complete/cancel karein');
+    setTimeout(showOrders, 600);
+    return;
+  }
+  renderTiers();
+  showScreen('buytiers');
+}
+function openSell() {
+  if (!token) return showScreen('login');
+  if (window.__hasPending && window.__pendingOrder && window.__pendingOrder.type !== 'sell') {
+    showToast('⚠️ Pehle apna pending buy order complete karein');
+    setTimeout(showOrders, 600);
+    return;
+  }
+  var b = Number(currentUser ? currentUser.balance : 0).toFixed(2);
+  document.getElementById('sell-bal-top').textContent = b;
+  document.getElementById('sell-bal').textContent = b;
+  document.getElementById('sell-count').textContent = '0';
+  loadSellProgress();
+  showScreen('sell');
+}
+function openSellForm() {
+  document.getElementById('sell-form-bal').textContent = Number(currentUser ? currentUser.balance : 0).toFixed(2);
+  showScreen('sellform');
+}
+function openBankPick() { renderPaymentMethods(); showScreen('bankpick'); }
+function openPaytmAuth() {
+  document.getElementById('paytm-phone').value = '';
+  document.getElementById('paytm-msg').textContent = '';
+  showScreen('paytmauth');
+}
+function openOrders() { orderTab = 'buy'; loadOrderHist(); showScreen('orders'); }
+function showOrders() { openOrders(); }
+function openRewards() { if (!token) return showScreen('login'); loadRewards(); showScreen('rewards'); }
+function openProfile() { if (!token) return showScreen('login'); loadProfile(); showScreen('profile'); }
+function openProfileFull() { showToast('UID: ' + (currentUser ? currentUser.phone : '—')); }
+function openHelp() {
+  if (confirm('Help Center\n\n📱 WhatsApp: +91 90000 00000\n📧 help@zenithpay.app\n\nWhatsApp open karein?')) {
+    window.open('https://wa.me/919000000000', '_blank');
+  }
+}
+function confirmLogout() {
+  if (!token) return;
+  if (confirm('Logout karna chahte hain?')) logout();
+}
+function logout() {
+  token = null; currentUser = null;
+  localStorage.removeItem('zp_token');
+  document.getElementById('phone').value = '';
+  document.getElementById('password').value = '';
+  showScreen('login');
+}
+
+/* ============ TOAST ============ */
+function showToast(text) {
+  var t = document.getElementById('toast');
+  t.textContent = text;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(function(){ t.classList.remove('show'); }, 2200);
+}
+
+/* ============ AUTH ============ */
+function togglePw() {
+  var i = document.getElementById('password');
+  var eye = document.getElementById('eye-icon');
+  if (i.type === 'password') {
+    i.type = 'text';
+    eye.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/>';
+  } else {
+    i.type = 'password';
+    eye.innerHTML = '<path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/>';
+  }
+}
+
+function forgotPw() {
+  var phone = document.getElementById('phone').value.trim();
+  if (phone.length !== 10) { showToast('Pehle phone number daalein'); return; }
+  showToast('Reset link +91 ' + phone + ' par bheja jayega');
+}
+
+function switchMode() {
+  openRegister();
+}
+
+function authMsg(text, type) {
+  var el = document.getElementById('msg');
+  el.textContent = text;
+  el.style.color = type === 'error' ? '#EF4444' : type === 'success' ? '#10B981' : '#D99B00';
+}
+
+function doAuth() {
+  var phone = document.getElementById('phone').value.trim();
+  var pw = document.getElementById('password').value;
+  var btn = document.getElementById('auth-btn');
+
+  if (phone.length !== 10) { authMsg('10-digit phone daalein', 'error'); return; }
+  if (pw.length < 4) { authMsg('Password min 4 characters', 'error'); return; }
+
+  btn.disabled = true;
+  var orig = btn.textContent;
+  btn.textContent = 'Please wait...';
+  authMsg('', '');
+
+  if (mode === 'register') {
+    api('/api/register', 'POST', { phone: phone, password: pw })
+      .then(function(){
+        authMsg('✅ Registered! Ab login karein.', 'success');
+        setTimeout(switchMode, 900);
+      })
+      .catch(function(e){
+        if (e.message.toLowerCase().indexOf('exist') !== -1) {
+          authMsg('Number pehle se registered', 'error');
+          setTimeout(switchMode, 1000);
+        } else {
+          authMsg(e.message, 'error');
+        }
+      })
+      .then(function(){ btn.disabled = false; btn.textContent = orig; });
+  } else {
+    api('/api/login', 'POST', { phone: phone, password: pw })
+      .then(function(d){
+        token = d.token;
+        currentUser = d;
+        localStorage.setItem('zp_token', token);
+        authMsg('✅ Login successful!', 'success');
+        setTimeout(function(){
+          refreshAll();
+          showScreen('home');
+          authMsg('', '');
+        }, 400);
+      })
+      .catch(function(e){
+        if (e.message.toLowerCase().indexOf('invalid') !== -1) {
+          authMsg('Galat phone ya password', 'error');
+        } else {
+          authMsg('Error: ' + e.message, 'error');
+        }
+      })
+      .then(function(){ btn.disabled = false; btn.textContent = orig; });
+  }
+}
+
+/* ============ HOME ============ */
+function refreshAll() {
+  if (!token) return;
+  api('/api/me').then(function(me){
+    currentUser = me;
+    document.getElementById('balance').textContent = Number(me.balance).toFixed(2);
+    document.getElementById('uphone').textContent = me.phone;
+    document.getElementById('uplan').textContent = me.plan || 'None';
+    loadOrders();
+  }).catch(function(){ logout(); });
+}
+
+function loadOrders() {
+  if (!token) return;
+  api('/api/orders').then(function(list){
+    var container = document.getElementById('orders-container');
+    var pendingOrders = list.filter(function(o){ return o.status === 'pending'; });
+    var pending = pendingOrders.length;
+
+    document.getElementById('orders-title').textContent = 'You have ' + pending + ' orders in progress';
+
+    // Block new buy/sell if there's a pending order
+    window.__hasPending = pending > 0;
+    window.__pendingOrder = pendingOrders[0] || null;
+
+    if (!list.length) {
+      container.innerHTML = '<div style="padding:30px 20px;display:flex;flex-direction:column;align-items:center">' +
+        '<div style="width:220px;height:160px;position:relative;display:flex;align-items:center;justify-content:center">' +
+        '<div style="position:absolute;inset:0;background:#F1F3F5;border-radius:50%;transform:scale(0.95,0.75)"></div>' +
+        '<div style="position:relative;z-index:2;width:100px;height:130px;background:#fff;border-radius:10px;border:1px solid #E5E7EB;box-shadow:0 6px 16px rgba(0,0,0,0.06);padding:10px;display:flex;flex-direction:column">' +
+        '<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:50px;height:16px;background:#CFD6DF;border-radius:6px 6px 0 0;display:flex;align-items:center;justify-content:center"><div style="width:26px;height:5px;background:rgba(156,163,175,0.4);border-radius:99px"></div></div>' +
+        '<div style="flex:1;border:1px dashed #E5E7EB;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:12px">' +
+        '<div style="height:6px;width:40px;background:#F3F4F6;border-radius:99px"></div>' +
+        '<div style="height:6px;width:56px;background:#F3F4F6;border-radius:99px"></div>' +
+        '<div style="height:6px;width:32px;background:#F3F4F6;border-radius:99px"></div>' +
+        '</div></div></div>' +
+        '<div style="font-size:13px;color:#9CA3AF;margin-top:12px">No orders yet</div></div>';
+      return;
+    }
+
+    var html = '';
+
+    // Show pending order banner
+    if (pending > 0) {
+      var po = pendingOrders[0];
+      var isBuy = po.type === 'buy';
+      html += '<div style="background:linear-gradient(135deg,#FEF3C7,#FDE68A);border:2px solid #F59E0B;border-radius:14px;padding:14px;margin-bottom:12px">' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">' +
+          '<span style="font-size:20px">⚠️</span>' +
+          '<span style="font-size:14px;font-weight:800;color:#92400E">Pending Order</span>' +
+        '</div>' +
+        '<div style="font-size:13px;color:#78350F;font-weight:600;line-height:1.5">' +
+          (isBuy ? '💰 BUY' : '💸 SELL') + ' ₹' + po.amount + ' is pending.<br>' +
+          'Pehle ise complete ya cancel karein, phir naya order bana sakte hain.' +
+        '</div>' +
+        '<div style="display:flex;gap:8px;margin-top:12px">' +
+          '<button onclick="showOrders()" style="flex:1;background:#F59E0B;color:#fff;border:0;padding:10px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer">👁 View Order</button>' +
+          '<button onclick="openCancel(\'' + po.id + '\')" style="flex:1;background:#EF4444;color:#fff;border:0;padding:10px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer">✕ Cancel</button>' +
+        '</div>' +
+      '</div>';
+    }
+
+    // Order history
+    html += list.slice(0,10).map(function(o){
+      var isBuy = o.type === 'buy';
+      var bg = o.status === 'completed' ? '#D1FAE5' : o.status === 'pending' ? '#FEF3C7' : '#FEE2E2';
+      var color = o.status === 'completed' ? '#047857' : o.status === 'pending' ? '#B45309' : '#B91C1C';
+      var t = new Date(o.createdAt).toLocaleString('en-IN', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      return '<div style="background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">' +
+        '<div><div style="font-size:14px;font-weight:700;color:#1F2937">' + (isBuy ? '💰 Buy' : '💸 Sell') + ' ₹' + o.amount + '</div>' +
+        '<div style="font-size:11px;color:#9CA3AF;margin-top:2px">' + t + '</div></div>' +
+        '<span style="background:' + bg + ';color:' + color + ';font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px;text-transform:uppercase">' + o.status + '</span>' +
+      '</div>';
+    }).join('');
+
+    container.innerHTML = html;
+  }).catch(function(){});
+}
+
+/* ============ BUY TIERS ============ */
+function renderTiers() {
+  loadBuyListings();
+}
+
+var buyCurrentTab = 'OTP-UPI';
+var buyCurrentFilter = 'Default';
+
+function loadBuyListings() {
+  var el = document.getElementById('buy-listings');
+  if (!el) return;
+  el.innerHTML = '<div style="padding:60px 20px;text-align:center;color:#9CA3AF;font-size:13px">Loading listings...</div>';
+
+  // Fetch marketplace listings from backend
+  api('/api/marketplace/listings').then(function(list){
+    var listings = [];
+
+    if (list && list.length) {
+      // Real listings from other sellers
+      listings = list.map(function(m){
+        return {
+          id: m.id,
+          price: m.price,
+          reward: (m.price * 0.05).toFixed(1),
+          limit: m.price + '-' + m.price,
+          seller: m.sellerPhone,
+          name: m.name
+        };
+      });
+    }
+
+    // Add default demo listings if fewer than 5
+    var defaults = [
+      { price: 100, reward: '5.0', limit: '100-100' },
+      { price: 110, reward: '5.5', limit: '110-110' },
+      { price: 100, reward: '5.0', limit: '100-100' },
+      { price: 150, reward: '7.5', limit: '150-150' },
+      { price: 200, reward: '10.0', limit: '200-200' }
+    ];
+
+    // Fill to at least 5 items
+    while (listings.length < 5) {
+      var d = defaults[listings.length % defaults.length];
+      listings.push({
+        id: 'DEMO' + (listings.length + 1),
+        price: d.price,
+        reward: d.reward,
+        limit: d.limit,
+        isDemo: true
+      });
+    }
+
+    // Apply filter
+    if (buyCurrentFilter === 'Large') {
+      listings.sort(function(a,b){ return b.price - a.price; });
+    } else if (buyCurrentFilter === 'Small') {
+      listings.sort(function(a,b){ return a.price - b.price; });
+    }
+
+    renderListingRows(listings);
+  }).catch(function(){
+    // Fallback to demo listings if API fails
+    var defaults = [
+      { id: 'DEMO1', price: 100, reward: '5.0', limit: '100-100' },
+      { id: 'DEMO2', price: 110, reward: '5.5', limit: '110-110' },
+      { id: 'DEMO3', price: 100, reward: '5.0', limit: '100-100' },
+      { id: 'DEMO4', price: 150, reward: '7.5', limit: '150-150' },
+      { id: 'DEMO5', price: 200, reward: '10.0', limit: '200-200' }
+    ];
+    renderListingRows(defaults);
+  });
+}
+
+function renderListingRows(listings) {
+  var el = document.getElementById('buy-listings');
+  el.innerHTML = listings.map(function(l, i){
+    var isLast = i === listings.length - 1;
+    var borderStyle = isLast ? '' : 'border-bottom:1px solid rgba(243,244,246,0.7);';
+    return '<div style="padding:16px 0;display:flex;align-items:center;justify-content:space-between;' + borderStyle + '">' +
+      '<div style="display:flex;align-items:flex-start;gap:12px">' +
+        // Monogram logo
+        '<div style="width:36px;height:36px;border-radius:50%;background:#8E939B;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px;box-shadow:inset 0 1px 2px rgba(0,0,0,0.1)">' +
+          '<span style="color:#E5A819;font-weight:900;font-size:20px;font-style:italic;letter-spacing:-0.04em;text-shadow:0 1px 1px rgba(0,0,0,0.15)">O</span>' +
+        '</div>' +
+        // Details
+        '<div style="display:flex;flex-direction:column;gap:4px">' +
+          // Price row
+          '<div style="display:flex;align-items:center;gap:8px">' +
+            '<span style="font-size:18px;font-weight:800;color:#111827;line-height:1">₹' + l.price + '</span>' +
+            '<span style="font-size:11px;font-weight:800;color:#4B5563;font-style:italic;display:flex;align-items:center;gap:2px">UPI<svg width="10" height="10" fill="none" viewBox="0 0 24 24"><path d="M4 18L14 4L11 18L20 6" stroke="#0FA958" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg></span>' +
+          '</div>' +
+          // Badges row
+          '<div style="display:flex;align-items:center;gap:6px">' +
+            '<span style="background:#FFF1EC;color:#F35C2B;font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;display:flex;align-items:center;gap:4px">🎁 Reward +' + l.reward + '</span>' +
+            '<span style="background:#F3F4F6;color:#8C919C;font-size:11px;font-weight:500;padding:2px 8px;border-radius:4px">Limit ' + l.limit + '</span>' +
+          '</div>' +
+          // Payment icons
+          '<div style="display:flex;align-items:center;gap:4px;padding-top:2px">' +
+            '<span style="width:16px;height:16px;border-radius:50%;background:#5F259F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700">पे</span>' +
+            '<span style="width:16px;height:16px;border-radius:4px;background:#00BAF2;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">Pay</span>' +
+            '<span style="width:16px;height:16px;border-radius:4px;background:#FF652F;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">✈</span>' +
+            '<span style="width:16px;height:16px;border-radius:4px;background:#4285F4;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">G</span>' +
+            '<span style="width:16px;height:16px;border-radius:4px;background:#673AB7;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">BH</span>' +
+            '<span style="width:16px;height:16px;border-radius:50%;background:#00897B;color:#fff;display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700">M</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      // Buy button
+      '<button onclick="buyListing(' + l.price + ', \'' + l.id + '\')" style="width:94px;padding:8px;background:#F7B614;color:#111827;font-weight:700;font-size:14px;border:0;border-radius:99px;cursor:pointer;box-shadow:0 1px 3px rgba(0,0,0,0.08);transition:0.15s">Buy</button>' +
+    '</div>';
+  }).join('');
+}
+
+function switchBuyTab(tab, btn) {
+  buyCurrentTab = tab;
+  document.querySelectorAll('.buy-tab').forEach(function(b){
+    b.style.background = 'none';
+    var span = b.querySelector('span:first-child');
+    var indicator = b.querySelector('.buy-indicator');
+    if (indicator) {
+      indicator.style.background = 'transparent';
+    }
+  });
+  // Apply active style
+  if (btn) {
+    var bigText = btn.querySelector('span:not(.buy-indicator):not([style*="position:absolute"])');
+    if (bigText) bigText.style.color = '#111827';
+    var ind = btn.querySelector('.buy-indicator');
+    if (ind) ind.style.background = '#000';
+  }
+  // Reload listings filtered by tab (demo: all listings shown)
+  loadBuyListings();
+}
+
+function toggleFilterDropdown(e) {
+  e.stopPropagation();
+  var d = document.getElementById('filterDropdown');
+  d.classList.toggle('hidden');
+}
+
+function setFilter(name, e) {
+  e.stopPropagation();
+  buyCurrentFilter = name;
+  document.getElementById('filterLabel').textContent = name;
+  document.getElementById('filterDropdown').classList.add('hidden');
+  loadBuyListings();
+}
+
+document.addEventListener('click', function(e){
+  var d = document.getElementById('filterDropdown');
+  var btn = document.getElementById('filterBtn');
+  if (d && btn && !d.contains(e.target) && !btn.contains(e.target)) {
+    d.classList.add('hidden');
+  }
+});
+
+function buyListing(amount, listingId) {
+  if (!token) return showScreen('login');
+  if (window.__hasPending) {
+    showToast('⚠️ Pehle pending order complete/cancel karein');
+    setTimeout(showOrders, 600);
+    return;
+  }
+  if (!confirm('Buy ORB for ₹' + amount + '?\n\nAapko QR milega, UPI se pay karein.')) return;
+
+  api('/api/buy', 'POST', { amount: amount }).then(function(d){
+    showQRPopup(d.qr, d.requestId, amount);
+  }).catch(function(e){
+    showToast('Error: ' + e.message);
+  });
+}
+
+function showQRPopup(qr, reqId, amount) {
+  openUtrScreen(amount, reqId, qr);
+}
+
+function copyQrReqId(id) {
+  navigator.clipboard?.writeText(id);
+  showToast('Request ID copied');
+}
+
+
+
+function pickTier(amount) {
+  if (!token) return showScreen('login');
+  api('/api/buy', 'POST', { amount: amount })
+    .then(function(d){
+      showToast('QR ₹' + amount + ' ready');
+      // Show QR in an alert-like view - simpler: ask user to check orders
+      // For now, show admin will approve
+      var img = document.createElement('div');
+      img.id = 'qr-popup';
+      img.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px;flex-direction:column;gap:16px';
+      img.innerHTML =
+        '<div style="background:#fff;padding:20px;border-radius:16px;text-align:center">' +
+        '<img src="' + d.qr + '" style="width:240px;height:240px"/>' +
+        '<div style="font-size:13px;color:#6B7280;margin-top:12px">Scan & pay ₹' + amount + '</div>' +
+        '<div style="font-size:11px;color:#9CA3AF;margin-top:4px;font-family:monospace">' + d.requestId + '</div>' +
+        '<button onclick="document.getElementById(\'qr-popup\').remove()" style="margin-top:16px;background:#F5B916;border:0;padding:10px 24px;border-radius:8px;font-weight:700;cursor:pointer">Close</button>' +
+        '</div>';
+      document.body.appendChild(img);
+    })
+    .catch(function(e){ showToast('Error: ' + e.message); });
+}
+
+/* ============ SELL ============ */
+function loadSellProgress() {
+  if (!token) return;
+  api('/api/orders').then(function(list){
+    var pending = list.filter(function(o){ return o.type === 'sell' && o.status === 'pending'; });
+    var total = pending.reduce(function(s, o){ return s + Number(o.amount); }, 0);
+    document.getElementById('sell-progress').textContent = total.toFixed(0);
+    document.getElementById('sell-count').textContent = pending.length;
+    var el = document.getElementById('sell-progress-list');
+    if (!pending.length) {
+      el.innerHTML = '<div style="padding:20px;text-align:center;color:#94A3B8;font-size:13px">No pending sell orders</div>';
+      return;
+    }
+    el.innerHTML = pending.map(function(o){
+      var t = new Date(o.createdAt).toLocaleString('en-IN', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      return '<div style="background:#fff;border:1px solid #E5E7EB;border-radius:12px;padding:12px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">' +
+        '<div><div style="font-size:14px;font-weight:700;color:#0F172A">₹' + o.amount + ' → ' + o.upiId + '</div>' +
+        '<div style="font-size:11px;color:#94A3B8;margin-top:2px">' + t + '</div></div>' +
+        '<span style="background:#FEF3C7;color:#B45309;font-size:10px;font-weight:700;padding:4px 10px;border-radius:99px">PENDING</span></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function doSell() {
+  var amt = Number(document.getElementById('sell-amount').value);
+  var upi = document.getElementById('sell-upi').value.trim();
+  if (!amt || amt < 1) { showToast('Minimum ₹1'); return; }
+  if (window.__hasPending) {
+    showToast('⚠️ Pehle apna pending order complete karein');
+    return;
+  }
+  if (!upi || upi.length < 5) { showToast('Valid UPI ID daalein'); return; }
+  if (amt > Number(currentUser.balance)) { showToast('Insufficient balance'); return; }
+
+  var btn = document.getElementById('sell-btn');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  api('/api/sell', 'POST', { amount: amt, upiId: upi })
+    .then(function(d){
+      currentUser.balance = d.newBalance;
+      document.getElementById('balance').textContent = Number(d.newBalance).toFixed(2);
+      document.getElementById('sell-amount').value = '';
+      document.getElementById('sell-upi').value = '';
+      showToast('✅ Sell request submitted!');
+      setTimeout(openSell, 900);
+    })
+    .catch(function(e){ showToast('Error: ' + e.message); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Submit Sell Request'; });
+}
+
+/* ============ BANK PICKER ============ */
+function renderBanks() {
+  renderPaymentMethods();
+}
+
+function renderPaymentMethods() {
+  var el = document.getElementById('payment-methods-list');
+  if (!el) return;
+
+  var methods = [
+    {
+      id: 'phonepe',
+      label: 'Phonepe',
+      bg: '#6833B3',
+      shadow: '0 8px 18px -4px rgba(103, 57, 182, 0.45)',
+      right: '<div style="width:36px;height:36px;border-radius:50%;background:#fff;color:#6833B3;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:20px;line-height:1">पे</div><span style="font-size:20px;font-weight:700;letter-spacing:-0.01em">PhonePe</span>'
+    },
+    {
+      id: 'paytm',
+      label: 'Paytm',
+      bg: '#3CB8ED',
+      shadow: '0 8px 18px -4px rgba(68, 188, 240, 0.45)',
+      right: '<div style="border:2.5px solid #fff;border-radius:7px;padding:2px 4px;text-align:center;line-height:1"><span style="font-size:10px;font-weight:900;display:block;text-transform:uppercase">pay</span><span style="font-size:10px;font-weight:900;display:block;text-transform:uppercase">tm</span></div><span style="font-size:24px;font-weight:900;letter-spacing:-0.02em;text-transform:lowercase">paytm</span>'
+    },
+    {
+      id: 'freecharge',
+      label: 'FreeCharge',
+      bg: '#F2652B',
+      shadow: '0 8px 18px -4px rgba(243, 110, 54, 0.45)',
+      right: '<svg width="32" height="32" fill="#fff" viewBox="0 0 24 24" style="transform:rotate(-12deg)"><path d="M4 12l10-8v6h6L10 20v-6H4z"/></svg><span style="font-size:17px;font-weight:900;text-transform:uppercase;letter-spacing:0.05em;font-style:italic">Freecharge</span>'
+    },
+    {
+      id: 'supermoney',
+      label: 'Supermoney',
+      bg: '#4339E8',
+      shadow: '0 8px 18px -4px rgba(73, 66, 228, 0.45)',
+      right: '<svg width="32" height="24" fill="#fff" viewBox="0 0 28 20"><path d="M14 0L3 6l11 6 11-6L14 0zm0 8L3 14l11 6 11-6-11-6z" opacity="0.95"/></svg><div style="text-align:left;line-height:1"><span style="font-size:17px;font-weight:800;display:block;text-transform:lowercase;letter-spacing:-0.02em">super.</span><span style="font-size:17px;font-weight:800;display:block;text-transform:lowercase;letter-spacing:-0.02em">money</span></div>'
+    },
+    {
+      id: 'navi',
+      label: 'navi',
+      bg: '#340050',
+      shadow: '0 8px 18px -4px rgba(58, 0, 92, 0.45)',
+      right: '<span style="font-size:26px;font-weight:900;text-transform:lowercase;letter-spacing:0.02em">navi</span>'
+    },
+    {
+      id: 'moneyview',
+      label: 'MoneyView',
+      bg: '#0C704A',
+      shadow: '0 8px 18px -4px rgba(15, 113, 78, 0.45)',
+      right: '<div style="width:32px;height:32px;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;padding:4px"><svg width="100%" height="100%" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M4 16l4-8 4 6 4-6 4 8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span style="font-size:19px;font-weight:700;letter-spacing:-0.01em">moneyview</span>'
+    }
+  ];
+
+  el.innerHTML = methods.map(function(m){
+    return '<button onclick="pickPaymentMethod(\'' + m.id + '\')" style="width:100%;height:76px;padding:0 20px;border-radius:12px;background:' + m.bg + ';box-shadow:' + m.shadow + ';display:flex;align-items:center;justify-content:space-between;color:#fff;border:0;cursor:pointer;transition:transform 0.15s" onmousedown="this.style.transform=\'scale(0.98)\'" onmouseup="this.style.transform=\'scale(1)\'" onmouseleave="this.style.transform=\'scale(1)\'">' +
+      '<span style="font-size:16px;font-weight:600;letter-spacing:0.02em">' + m.label + '</span>' +
+      '<div style="display:flex;align-items:center;gap:8px">' + m.right + '</div>' +
+    '</button>';
+  }).join('');
+}
+
+function pickPaymentMethod(id) {
+  // Save preference
+  localStorage.setItem('zp_pref_bank', id);
+
+  var upiSuffix = {
+    phonepe: '@ybl',
+    paytm: '@pty',
+    freecharge: '@freecharge',
+    supermoney: '@superyes',
+    navi: '@naviaxis',
+    moneyview: '@moneyview'
+  };
+
+  if (id === 'paytm') {
+    // Paytm special auth screen
+    openPaytmAuth();
+    return;
+  }
+
+  // Others: prefill UPI suffix and go to sell form
+  localStorage.setItem('zp_pref_upi_suffix', upiSuffix[id] || '@upi');
+  showToast('✅ ' + id + ' selected');
+  setTimeout(function(){
+    openSellForm();
+  }, 500);
+}
+
+
+
+function pickBank(id) {
+  if (id === 'paytm') { openPaytmAuth(); return; }
+  localStorage.setItem('zp_pref_bank', id);
+  showToast('✅ ' + id + ' selected');
+  setTimeout(openSellForm, 500);
+}
+
+function submitPaytm() {
+  var phone = document.getElementById('paytm-phone').value.trim();
+  var msg = document.getElementById('paytm-msg');
+  var btn = document.getElementById('paytm-btn');
+  if (phone.length !== 10) {
+    msg.textContent = 'Please enter a valid 10-digit phone number';
+    msg.style.color = '#ef4444';
+    return;
+  }
+  msg.textContent = '';
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+  localStorage.setItem('zp_paytm_phone', phone);
+  localStorage.setItem('zp_pref_upi', phone + '@pty');
+  setTimeout(function(){
+    btn.disabled = false;
+    btn.textContent = 'Next';
+    showToast('✅ Paytm authorized');
+    setTimeout(function(){
+      document.getElementById('sell-upi').value = phone + '@pty';
+      openSellForm();
+    }, 400);
+  }, 700);
+}
+
+/* ============ ORDERS ============ */
+function switchOrderTab(tab) {
+  orderTab = tab;
+  var buyBtn = document.getElementById('otab-buy');
+  var sellBtn = document.getElementById('otab-sell');
+  var lineBuy = document.getElementById('otab-line-buy');
+  if (tab === 'buy') {
+    buyBtn.style.color = '#111827';
+    buyBtn.style.fontWeight = '700';
+    sellBtn.style.color = '#9CA3AF';
+    sellBtn.style.fontWeight = '500';
+    lineBuy.style.display = 'block';
+  } else {
+    sellBtn.style.color = '#111827';
+    sellBtn.style.fontWeight = '700';
+    buyBtn.style.color = '#9CA3AF';
+    buyBtn.style.fontWeight = '500';
+    lineBuy.style.display = 'none';
+  }
+  loadOrderHist();
+}
+
+function loadOrderHist() {
+  if (!token) return;
+  api('/api/orders').then(function(list){
+    var filtered = list.filter(function(o){ return o.type === orderTab; });
+    var el = document.getElementById('orderhist-content');
+    if (!filtered.length) {
+      el.innerHTML = '<div style="text-align:center;padding:60px 20px;color:#9CA3AF;font-size:14px">No more</div>';
+      return;
+    }
+    el.innerHTML = filtered.map(function(o){
+      var t = new Date(o.createdAt).toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+      var badgeBg = o.status === 'completed' ? 'rgba(34,197,94,0.15)' : o.status === 'pending' ? 'rgba(245,158,11,0.15)' : 'rgba(239,68,68,0.15)';
+      var badgeColor = o.status === 'completed' ? '#22C55E' : o.status === 'pending' ? '#F59E0B' : '#EF4444';
+      var badgeText = o.status === 'completed' ? (orderTab === 'buy' ? 'PURCHASED' : 'SOLD') : o.status.toUpperCase();
+      var cancelBtn = (o.status === 'pending')
+        ? '<button onclick="openCancel(\'' + o.id + '\')" style="margin-top:8px;background:rgba(239,77,77,0.1);color:#EF4D4D;font-size:11px;font-weight:700;padding:6px 12px;border:1px solid rgba(239,77,77,0.25);border-radius:6px;cursor:pointer">Cancel Order</button>'
+        : '';
+      return '<div style="background:#fff;border:1px solid #F3F4F6;border-radius:16px;padding:16px;margin-bottom:12px;display:flex;justify-content:space-between;box-shadow:0 2px 8px rgba(0,0,0,0.04)">' +
+        '<div style="flex:1;min-width:0">' +
+          '<div style="font-size:15px;font-weight:700;color:#1F2937">' + (orderTab === 'buy' ? 'Buy' : 'Sell') + ' Order</div>' +
+          '<div style="font-size:11px;color:#9CA3AF;margin-top:4px">' + t + '</div>' +
+          cancelBtn +
+        '</div>' +
+        '<div style="text-align:right;flex-shrink:0;padding-left:8px">' +
+          '<div style="font-size:18px;font-weight:900;color:#1F2937">₹' + o.amount + '</div>' +
+          '<span style="display:inline-block;background:' + badgeBg + ';color:' + badgeColor + ';font-size:9px;font-weight:700;padding:3px 8px;border-radius:99px;margin-top:4px">' + badgeText + '</span>' +
+        '</div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+/* ============ REWARDS ============ */
+function loadRewards() {
+  if (!token) return;
+  api('/api/orders').then(function(list){
+    var buys = list.filter(function(o){ return o.type === 'buy' && o.status === 'completed'; });
+    var sells = list.filter(function(o){ return o.type === 'sell' && o.status === 'completed'; });
+    var vol = buys.concat(sells).reduce(function(s, o){ return s + Number(o.amount); }, 0);
+    document.getElementById('rw-claimed').textContent = vol.toFixed(0);
+    document.getElementById('rw-volume').textContent = vol.toFixed(0);
+    document.getElementById('rw-buys').textContent = buys.length;
+    document.getElementById('rw-sells').textContent = sells.length;
+    var total = buys.length + sells.length;
+    var lv = 'LV0';
+    if (total >= 20) lv = 'LV5';
+    else if (total >= 10) lv = 'LV4';
+    else if (total >= 6) lv = 'LV3';
+    else if (total >= 3) lv = 'LV2';
+    else if (total >= 1) lv = 'LV1';
+    document.getElementById('rw-level').textContent = lv;
+  }).catch(function(){});
+}
+
+function shareReferral() {
+  if (!currentUser) return;
+  var code = 'ZP' + currentUser.phone;
+  var url = window.location.origin + '/?ref=' + code;
+  var text = 'Join ZenithPay! Use referral code ' + code + ' and get 3% welcome bonus. ' + url;
+  if (navigator.share) {
+    navigator.share({ title: 'ZenithPay', text: text, url: url }).catch(function(){});
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text);
+    showToast('Invite link copied: ' + code);
+  } else {
+    showToast('Code: ' + code);
+  }
+}
+
+/* ============ PROFILE ============ */
+function loadProfile() {
+  if (!currentUser) return;
+  document.getElementById('pf-username').textContent = 'User ' + currentUser.phone.slice(-4);
+  document.getElementById('pf-uid').textContent = 'UID:' + currentUser.phone.slice(-8);
+  document.getElementById('pf-balance').textContent = Number(currentUser.balance).toFixed(2);
+  document.getElementById('pf-wallet').textContent = 'ZP' + currentUser.phone + 'XXXX' + (currentUser.id || '00000');
+}
+
+
+/* ============ TOPUP ============ */
+function openTopup() {
+  if (!token) return showScreen('login');
+  var bal = Number(currentUser ? currentUser.balance : 0).toFixed(2);
+  document.getElementById('tp-current').textContent = bal;
+  document.getElementById('tp-phone').textContent = currentUser ? currentUser.phone : '—';
+  document.getElementById('tp-qr-box').classList.add('hidden');
+  document.getElementById('tp-amount').value = 1;
+  updateTopupPreview();
+  if (currentUser && currentUser.firstBuyDone) {
+    document.getElementById('tp-bonus-note').style.display = 'none';
+  } else {
+    document.getElementById('tp-bonus-note').style.display = 'flex';
+  }
+  showScreen('topup');
+}
+
+function setTopup(v) {
+  document.getElementById('tp-amount').value = v;
+  updateTopupPreview();
+}
+
+function updateTopupPreview() {
+  var amt = Number(document.getElementById('tp-amount').value) || 0;
+  document.getElementById('tp-preview-amt').textContent = '₹' + amt;
+  document.getElementById('tp-preview-total').textContent = '₹' + amt;
+  var bonus = Math.round(amt * 0.03 * 100) / 100;
+  document.getElementById('tp-bonus-calc').textContent = '₹' + bonus.toFixed(2);
+}
+
+function doTopup() {
+  var amt = Number(document.getElementById('tp-amount').value);
+  if (!amt || amt < 1) { showToast('Minimum ₹1'); return; }
+
+  var btn = document.getElementById('tp-btn');
+  btn.disabled = true;
+  btn.textContent = 'Generating...';
+
+  api('/api/buy', 'POST', { amount: amt })
+    .then(function(d){
+      document.getElementById('tp-qr-img').src = d.qr;
+      document.getElementById('tp-req-id').textContent = d.requestId;
+      document.getElementById('tp-qr-box').classList.remove('hidden');
+      showToast('✅ QR ready! Scan karein');
+      // Auto poll for balance update
+      startTopupPoll(d.requestId, amt);
+    })
+    .catch(function(e){ showToast('Error: ' + e.message); })
+    .then(function(){ btn.disabled = false; btn.textContent = 'Generate Payment QR'; });
+}
+
+var tpPollTimer = null;
+function startTopupPoll(reqId, amt) {
+  if (tpPollTimer) clearInterval(tpPollTimer);
+  var startBal = Number(currentUser.balance);
+  var attempts = 0;
+  tpPollTimer = setInterval(function(){
+    attempts++;
+    api('/api/me').then(function(me){
+      if (Number(me.balance) > startBal) {
+        currentUser = me;
+        clearInterval(tpPollTimer);
+        document.getElementById('tp-current').textContent = Number(me.balance).toFixed(2);
+        document.getElementById('balance').textContent = Number(me.balance).toFixed(2);
+        showToast('✅ ₹' + (Number(me.balance) - startBal).toFixed(2) + ' credited!');
+        document.getElementById('tp-qr-box').classList.add('hidden');
+        setTimeout(goHome, 1200);
+      }
+    }).catch(function(){});
+    if (attempts > 40) { clearInterval(tpPollTimer); }
+  }, 3000);
+}
+
+
+/* ============ REGISTER + OTP ============ */
+var DEMO_OTP = '123456';
+var otpTimer = null;
+
+function openRegister() {
+  document.getElementById('reg-phone').value = '';
+  document.getElementById('reg-otp').value = '';
+  document.getElementById('reg-password').value = '';
+  document.getElementById('reg-confirm').value = '';
+  document.getElementById('reg-invite').value = '';
+  document.getElementById('reg-msg').textContent = '';
+  document.getElementById('otp-btn').textContent = 'Send';
+  document.getElementById('otp-btn').disabled = false;
+  showScreen('register');
+}
+
+function togglePwField(id, btn) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (el.type === 'password') {
+    el.type = 'text';
+    btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l18 18"/></svg>';
+  } else {
+    el.type = 'password';
+    btn.innerHTML = '<svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round" stroke-linejoin="round"/><path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+}
+
+function sendOtp() {
+  var phone = document.getElementById('reg-phone').value.trim();
+  if (phone.length !== 10) {
+    regMsg('Pehle 10-digit phone number daalein', 'error');
+    document.getElementById('reg-phone').focus();
+    return;
+  }
+
+  var btn = document.getElementById('otp-btn');
+  btn.disabled = true;
+  var count = 30;
+
+  // Show demo OTP
+  showToast('📱 DEMO OTP: ' + DEMO_OTP);
+  regMsg('Demo OTP: ' + DEMO_OTP + ' (auto-fill in 3s)', 'info');
+
+  // Auto-fill after 3 seconds for convenience
+  setTimeout(function() {
+    var otpField = document.getElementById('reg-otp');
+    if (otpField && !otpField.value) {
+      otpField.value = DEMO_OTP;
+      regMsg('✅ OTP auto-filled', 'success');
+    }
+  }, 3000);
+
+  btn.textContent = count + 's';
+  if (otpTimer) clearInterval(otpTimer);
+  otpTimer = setInterval(function() {
+    count--;
+    if (count <= 0) {
+      clearInterval(otpTimer);
+      btn.textContent = 'Resend';
+      btn.disabled = false;
+    } else {
+      btn.textContent = count + 's';
+    }
+  }, 1000);
+}
+
+function regMsg(text, type) {
+  var el = document.getElementById('reg-msg');
+  el.textContent = text;
+  el.style.color = type === 'error' ? '#EF4444' : type === 'success' ? '#10B981' : '#D99B00';
+}
+
+function doRegister() {
+  var phone = document.getElementById('reg-phone').value.trim();
+  var otp = document.getElementById('reg-otp').value.trim();
+  var pw = document.getElementById('reg-password').value;
+  var confirm = document.getElementById('reg-confirm').value;
+  var terms = document.getElementById('reg-terms').checked;
+  var btn = document.getElementById('reg-submit');
+
+  if (phone.length !== 10) { regMsg('Valid 10-digit phone number daalein', 'error'); return; }
+  if (!otp || otp.length !== 6) { regMsg('6-digit OTP enter karein', 'error'); return; }
+  if (otp !== DEMO_OTP) { regMsg('Galat OTP. Demo OTP: ' + DEMO_OTP, 'error'); return; }
+  if (pw.length < 4) { regMsg('Password minimum 4 characters', 'error'); return; }
+  if (pw !== confirm) { regMsg('Confirm password match nahi kar raha', 'error'); return; }
+  if (!terms) { regMsg('Terms & Conditions accept karein', 'error'); return; }
+
+  btn.disabled = true;
+  var orig = btn.textContent;
+  btn.textContent = 'Registering...';
+  regMsg('', '');
+
+  api('/api/register', 'POST', { phone: phone, password: pw })
+    .then(function() {
+      regMsg('✅ Registered! Login karein.', 'success');
+      setTimeout(function() {
+        document.getElementById('phone').value = phone;
+        document.getElementById('password').value = pw;
+        showScreen('login');
+        showToast('✅ Registered! Login button dabayein');
+      }, 900);
+    })
+    .catch(function(e) {
+      if (e.message.toLowerCase().indexOf('exist') !== -1) {
+        regMsg('Number pehle se registered. Login karein.', 'error');
+        setTimeout(function() {
+          document.getElementById('phone').value = phone;
+          document.getElementById('password').value = pw;
+          showScreen('login');
+        }, 1200);
+      } else {
+        regMsg('Error: ' + e.message, 'error');
+      }
+    })
+    .then(function() {
+      btn.disabled = false;
+      btn.textContent = orig;
+    });
+}
+
+
+/* ============ ORDER CANCEL ============ */
+var cancelOrderId = null;
+var cancelOrderData = null;
+
+function openCancel(orderId) {
+  cancelOrderId = orderId;
+  document.getElementById('cx-order-id').textContent = orderId;
+  // Default values, will be updated by loadCancelInfo
+  document.getElementById('cx-amount').textContent = '₹0.00';
+  document.getElementById('cx-phone').textContent = currentUser ? '+91 ' + currentUser.phone : '—';
+  document.getElementById('cx-time').textContent = new Date().toLocaleString('en-IN', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  document.getElementById('cx-note').value = '';
+  // Reset radio
+  document.querySelectorAll('input[name="cancel_reason"]').forEach(function(r){ r.checked = false; });
+  document.getElementById('cx-other-radio').checked = true;
+
+  showScreen('cancel');
+  loadCancelInfo();
+}
+
+function loadCancelInfo() {
+  if (!cancelOrderId) return;
+  api('/api/orders').then(function(list){
+    var o = list.find(function(x){ return x.id === cancelOrderId; });
+    if (!o) return;
+    cancelOrderData = o;
+    document.getElementById('cx-order-id').textContent = o.id;
+    document.getElementById('cx-amount').textContent = '₹' + Number(o.amount).toFixed(2);
+    document.getElementById('cx-phone').textContent = '📱 +91 ' + o.phone;
+    var d = new Date(o.createdAt);
+    document.getElementById('cx-time').textContent = d.toLocaleString('en-IN', { day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit' });
+  }).catch(function(){});
+}
+
+function copyCancelId() {
+  if (!cancelOrderId) return;
+  navigator.clipboard?.writeText(cancelOrderId);
+  showToast('Order ID copied');
+}
+
+function submitCancel() {
+  if (!cancelOrderId) { showToast('No order selected', false); return; }
+
+  var reason = document.querySelector('input[name="cancel_reason"]:checked');
+  if (!reason) { showToast('Please select a reason'); return; }
+
+  var note = document.getElementById('cx-note').value.trim();
+  if (reason.value === 'other' && !note) {
+    showToast('Please fill in other reasons');
+    document.getElementById('cx-note').focus();
+    return;
+  }
+
+  var btn = document.getElementById('cx-btn');
+  btn.disabled = true;
+  var orig = btn.textContent;
+  btn.textContent = 'Cancelling...';
+
+  var userReason = reason.value === 'other' ? ('Other: ' + note) : reason.value;
+
+  // Call backend to reject/cancel
+  api('/api/cancel-order', 'POST', { orderId: cancelOrderId, reason: userReason })
+    .then(function(d){
+      showToast('✅ Order cancelled');
+      setTimeout(function(){
+        openOrders();
+      }, 800);
+    })
+    .catch(function(e){
+      showToast('Error: ' + e.message, false);
+    })
+    .then(function(){
+      btn.disabled = false;
+      btn.textContent = orig;
+    });
+}
+
+
+/* ============ UTR PAYMENT SCREEN ============ */
+var utrData = { amount: 0, reqId: null, method: 'phonepe', expires: 0 };
+var utrTimerInterval = null;
+
+function openUtrScreen(amount, reqId, qr) {
+  utrData.amount = amount;
+  utrData.reqId = reqId;
+  utrData.expires = Date.now() + 15 * 60 * 1000;
+
+  document.getElementById('utr-amount').textContent = '₹' + Number(amount).toFixed(2);
+  document.getElementById('utr-qr-img').src = qr;
+  document.getElementById('utr-reqid').textContent = reqId;
+  document.getElementById('utr-input').value = '';
+  document.getElementById('utr-phone').value = '';
+  document.getElementById('utr-otp').value = '';
+  var otpSec = document.getElementById('utr-otp-section');
+  if (otpSec) otpSec.style.display = 'none';
+  var hint = document.getElementById('utr-otp-hint');
+  if (hint) { hint.textContent = 'Demo OTP: 123456'; hint.style.color = '#D99B00'; }
+  var sendBtn = document.getElementById('utr-otp-send-btn');
+  if (sendBtn) { sendBtn.textContent = 'Send'; sendBtn.disabled = false; sendBtn.style.opacity = '1'; }
+
+  // Set method from localStorage
+  var method = localStorage.getItem('zp_pref_bank') || 'phonepe';
+  utrData.method = method;
+  var methodMap = {
+    phonepe: { label: 'Phonepe', bg: 'linear-gradient(90deg,#5F259F,#7B2CBF)', shadow: '0 6px 16px -4px rgba(95,37,159,0.4)' },
+    paytm: { label: 'Paytm', bg: 'linear-gradient(90deg,#3CB8ED,#44BCF0)', shadow: '0 6px 16px -4px rgba(68,188,240,0.4)' },
+    freecharge: { label: 'FreeCharge', bg: 'linear-gradient(90deg,#F2652B,#F36E36)', shadow: '0 6px 16px -4px rgba(243,110,54,0.4)' },
+    supermoney: { label: 'Supermoney', bg: 'linear-gradient(90deg,#4339E8,#4942E4)', shadow: '0 6px 16px -4px rgba(73,66,228,0.4)' },
+    navi: { label: 'navi', bg: 'linear-gradient(90deg,#340050,#3A005C)', shadow: '0 6px 16px -4px rgba(58,0,92,0.4)' },
+    moneyview: { label: 'MoneyView', bg: 'linear-gradient(90deg,#0C704A,#0F714E)', shadow: '0 6px 16px -4px rgba(15,113,78,0.4)' }
+  };
+  var m = methodMap[method] || methodMap.phonepe;
+  document.getElementById('utr-method-label').textContent = m.label;
+  document.getElementById('utr-method-card').style.background = m.bg;
+  document.getElementById('utr-method-card').style.boxShadow = m.shadow;
+
+  startUtrTimer();
+  checkUtrForm();
+  showScreen('utr');
+}
+
+function startUtrTimer() {
+  if (utrTimerInterval) clearInterval(utrTimerInterval);
+  function tick() {
+    var remaining = Math.max(0, Math.floor((utrData.expires - Date.now()) / 1000));
+    var m = String(Math.floor(remaining / 60)).padStart(2, '0');
+    var s = String(remaining % 60).padStart(2, '0');
+    document.getElementById('utr-timer').textContent = m + ':' + s;
+    if (remaining <= 0) clearInterval(utrTimerInterval);
+  }
+  tick();
+  utrTimerInterval = setInterval(tick, 1000);
+}
+
+function copyUtrAmount() {
+  navigator.clipboard?.writeText(String(utrData.amount));
+  showToast('Amount copied');
+}
+function copyUtrReqId() {
+  if (!utrData.reqId) return;
+  navigator.clipboard?.writeText(utrData.reqId);
+  showToast('Request ID copied');
+}
+
+function sendUtrOtp(e) {
+  var phone = document.getElementById('utr-phone').value.trim();
+  if (phone.length !== 10) { showToast('Pehle 10-digit phone number daalein'); return; }
+
+  // Show OTP section
+  var otpSection = document.getElementById('utr-otp-section');
+  otpSection.style.display = 'flex';
+  document.getElementById('utr-otp-phone').textContent = '+91 ' + phone;
+
+  showToast('📱 Demo OTP: 123456');
+  document.getElementById('utr-otp').focus();
+
+  var btn = e ? e.target : document.getElementById('utr-otp-send-btn');
+  if (!btn) return;
+  var count = 30;
+  btn.disabled = true;
+  btn.style.opacity = '0.7';
+  btn.textContent = count + 's';
+  var t = setInterval(function(){
+    count--;
+    if (count <= 0) {
+      clearInterval(t);
+      btn.textContent = 'Resend';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    } else {
+      btn.textContent = count + 's';
+    }
+  }, 1000);
+
+  // Auto-fill demo OTP after 2 seconds
+  setTimeout(function(){
+    var otpField = document.getElementById('utr-otp');
+    if (otpField && !otpField.value) {
+      otpField.value = '123456';
+      checkUtrForm();
+      document.getElementById('utr-otp-hint').textContent = '✅ OTP auto-filled';
+      document.getElementById('utr-otp-hint').style.color = '#10B981';
+    }
+  }, 2000);
+}
+
+function checkUtrForm() {
+  var utr = document.getElementById('utr-input').value.trim();
+  var phone = document.getElementById('utr-phone').value.trim();
+  var otp = document.getElementById('utr-otp').value.trim();
+  var btn = document.getElementById('utr-submit');
+
+  var valid = utr.length >= 12 && phone.length === 10 && otp.length === 6;
+
+  if (valid) {
+    btn.disabled = false;
+    btn.style.background = '#F5B916';
+    btn.style.color = '#1E232A';
+    btn.style.fontWeight = '700';
+    btn.style.cursor = 'pointer';
+    btn.textContent = 'Submit';
+  } else {
+    btn.disabled = true;
+    btn.style.background = '#FDECB2';
+    btn.style.color = '#D2A645';
+    btn.style.fontWeight = '500';
+    btn.style.cursor = 'not-allowed';
+    if (utr.length < 12) {
+      btn.textContent = 'Submit (UTR not entered)';
+    } else if (phone.length !== 10) {
+      btn.textContent = 'Submit (Phone not entered)';
+    } else if (otp.length !== 6) {
+      btn.textContent = 'Submit (OTP not entered)';
+    } else {
+      btn.textContent = 'Submit';
+    }
+  }
+}
+
+function submitUtrForm() {
+  var utr = document.getElementById('utr-input').value.trim();
+  var phone = document.getElementById('utr-phone').value.trim();
+  var otp = document.getElementById('utr-otp').value.trim();
+
+  if (utr.length < 12) { showToast('Valid 12-digit UTR daalein'); return; }
+  if (phone.length !== 10) { showToast('Valid 10-digit phone daalein'); return; }
+  if (otp.length !== 6) { showToast('Valid 6-digit OTP daalein'); return; }
+  if (!utrData.reqId) { showToast('No order selected'); return; }
+
+  var btn = document.getElementById('utr-submit');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  api('/api/submit-utr', 'POST', {
+    orderId: utrData.reqId,
+    utr: utr,
+    payerPhone: phone,
+    method: utrData.method,
+    otp: otp
+  }).then(function(d){
+    showToast('✅ UTR + OTP submitted! Admin verify karega.');
+    setTimeout(function(){
+      goHome();
+    }, 1200);
+  }).catch(function(e){
+    showToast('Error: ' + e.message, false);
+    btn.disabled = false;
+    checkUtrForm();
+  });
+}
+
+function loadUtrScreen() {
+  if (!utrData.reqId) { goHome(); return; }
+  loadUtrScreen.lastAmount = utrData.amount;
+}
+
+
+/* Poll balance to auto-redirect if credited */
+var utrPollTimer = null;
+function startUtrPoll(startBal) {
+  if (utrPollTimer) clearInterval(utrPollTimer);
+  utrPollTimer = setInterval(function(){
+    if (!token) return;
+    api('/api/me').then(function(me){
+      if (Number(me.balance) > startBal) {
+        clearInterval(utrPollTimer);
+        currentUser = me;
+        showToast('✅ ₹' + (Number(me.balance) - startBal).toFixed(2) + ' credited!');
+        setTimeout(goHome, 800);
+      }
+    }).catch(function(){});
+  }, 3000);
+}
+
+
+/* ============ SUBSCRIPTIONS ============ */
+function openSubs() {
+  if (!token) return showScreen('login');
+  loadSubs();
+  showScreen('subs');
+}
+
+function loadSubs() {
+  // Load plans
+  api('/api/plans').then(function(plans){
+    var el = document.getElementById('subs-plans-list');
+    if (!plans.length) {
+      el.innerHTML = '<div style="padding:30px 20px;text-align:center;color:#9CA3AF;font-size:13px">No plans available right now. Check back later.</div>';
+      return;
+    }
+    el.innerHTML = plans.map(function(p){
+      var total = p.dailyReward * p.days;
+      return '<div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:16px;margin-bottom:12px;box-shadow:0 2px 8px rgba(0,0,0,0.04)">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">' +
+          '<div><div style="font-size:16px;font-weight:800;color:#1F2937">' + p.name + '</div>' +
+          '<div style="font-size:11px;color:#6B7280;margin-top:2px">' + p.days + ' days subscription</div></div>' +
+          '<div style="text-align:right"><div style="font-size:22px;font-weight:900;color:#F5B916">₹' + p.price + '</div></div>' +
+        '</div>' +
+        '<div style="background:#F9FAFB;border-radius:10px;padding:10px;margin-bottom:12px">' +
+          '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:#6B7280">Daily Reward</span><span style="color:#8B5CF6;font-weight:700">₹' + p.dailyReward + '</span></div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:#6B7280">Total Rewards</span><span style="color:#10B981;font-weight:700">₹' + total.toFixed(2) + '</span></div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0"><span style="color:#6B7280">Duration</span><span style="color:#1F2937;font-weight:700">' + p.days + ' days</span></div>' +
+        '</div>' +
+        '<button onclick="buySubscription(\'' + p.id + '\')" style="width:100%;padding:12px;background:#F5B916;color:#1E232A;font-weight:700;font-size:14px;border:0;border-radius:10px;cursor:pointer">Subscribe Now</button>' +
+      '</div>';
+    }).join('');
+  }).catch(function(){
+    document.getElementById('subs-plans-list').innerHTML = '<div style="padding:30px;text-align:center;color:#9CA3AF;font-size:13px">Failed to load plans</div>';
+  });
+
+  // Load my subscriptions
+  api('/api/subscriptions/my').then(function(list){
+    var el = document.getElementById('subs-mine-list');
+    if (!list.length) {
+      el.innerHTML = '<div style="padding:20px;text-align:center;color:#9CA3AF;font-size:13px">No subscriptions yet</div>';
+      return;
+    }
+    el.innerHTML = list.map(function(s){
+      var totalGiven = s.rewards.reduce(function(sum, r){ return sum + r.amount; }, 0);
+      var daysLeft = s.days - s.rewards.length;
+      var progress = Math.round((s.rewards.length / s.days) * 100);
+      var statusBadge = s.status === 'active' 
+        ? '<span style="font-size:10px;font-weight:700;color:#1D4ED8;background:#DBEAFE;padding:3px 8px;border-radius:99px">ACTIVE</span>'
+        : '<span style="font-size:10px;font-weight:700;color:#047857;background:#D1FAE5;padding:3px 8px;border-radius:99px">COMPLETED</span>';
+      return '<div style="background:#fff;border:1px solid #E5E7EB;border-radius:14px;padding:16px;margin-bottom:12px">' +
+        '<div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px">' +
+          '<div><div style="font-size:14px;font-weight:800;color:#1F2937">' + s.planName + '</div>' +
+          '<div style="font-size:11px;color:#6B7280;margin-top:2px">₹' + s.planPrice + ' · ' + s.days + ' days</div></div>' +
+          statusBadge +
+        '</div>' +
+        '<div style="background:#F9FAFB;border-radius:10px;padding:12px;margin-bottom:10px">' +
+          '<div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px">' +
+            '<span style="color:#6B7280">Progress</span>' +
+            '<span style="color:#8B5CF6;font-weight:700">' + s.rewards.length + ' / ' + s.days + ' days</span>' +
+          '</div>' +
+          '<div style="height:6px;background:#E5E7EB;border-radius:99px;overflow:hidden;margin-bottom:8px">' +
+            '<div style="height:100%;background:linear-gradient(90deg,#8B5CF6,#F5B916);width:' + progress + '%"></div>' +
+          '</div>' +
+          '<div style="display:flex;justify-content:space-between;font-size:11px;color:#6B7280">' +
+            '<span>Earned: <b style="color:#10B981">₹' + totalGiven.toFixed(2) + '</b></span>' +
+            '<span>Days left: <b style="color:#1F2937">' + daysLeft + '</b></span>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  }).catch(function(){});
+}
+
+function buySubscription(planId) {
+  if (!token) return showScreen('login');
+  if (!confirm('Subscribe to this plan?\n\nAmount will be deducted from your wallet. Admin will activate it.')) return;
+  api('/api/subscribe', 'POST', { planId: planId })
+    .then(function(d){
+      showToast('✅ Subscription requested! Admin will activate.');
+      refreshDash();
+      loadSubs();
+      setTimeout(function(){ showOrders(); }, 800);
+    })
+    .catch(function(e){ 
+      showToast('❌ ' + e.message); 
+    });
+}
+
+/* ============ INIT ============ */
+(function init() {
+  // Splash screen always shows first
+  showScreen('splash');
+
+  setTimeout(function() {
+    if (token) {
+      api('/api/me').then(function(me){
+        currentUser = me;
+        refreshAll();
+        showScreen('home');
+      }).catch(function(){
+        token = null;
+        localStorage.removeItem('zp_token');
+        showScreen('login');
+      });
+    } else {
+      showScreen('login');
+    }
+  }, 2500);
+})();
+</script>
+</body>
+</html>
